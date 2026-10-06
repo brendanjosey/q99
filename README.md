@@ -18,15 +18,16 @@ Research conducted by: Deakin University
 - This enables water demand estimates to adapt as plumbing fixture change over time.  
 
 ***Save money, reduce energy and improve water quality!***  
-The research has shown current provisions of AS/NZS 3500 significantly overestimate the peak demand, leading to oversized plumbing networks that are costly to build, are inefficient to run and lead to increase stagnation and low flow velocity that can introduce water quality risks.  
-(add image)
+- The research has shown current provisions of AS/NZS 3500 significantly overestimate the peak demand.
+- This leads to oversized plumbing networks that are costly to build, are inefficient to run and lead to increase stagnation and low flow velocity that can introduce water quality risks.  
+(add image)  
 
 ***Generate documentation for your performance solution!***  
-Generate a table of results to append to your performance solution.  
-The HCAA have even developed a performance template with all supporting information and formulas so that you don't have to.  
+- Generate a table of results to append to your performance solution.    
+- The HCAA have even developed a performance template with all supporting information and formulas so that you don't have to.  
 
-**Free desktop software with no accounts needed!**
-Don't want to install before trying - test using the web version here....  
+***Free desktop software with no accounts needed!***  
+- Don't want to install before trying - test using the web version here....  
 
 ## INSTALLATION
 
