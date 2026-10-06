@@ -1,4 +1,6 @@
-use crate::props::core::{ProbabiltyCoeffs, WaterUseType};
+use crate::props::core::{
+    FixtureProps, ProbabiltyCoeffs, TempProps, WaterUseType, calc_diversified_flow_rate,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FixtureType {
@@ -8,6 +10,8 @@ pub enum FixtureType {
     TapBasin,
     TapKitchen,
     TapLaundry,
+    WashingMachine,
+    Dishwasher,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -54,25 +58,73 @@ impl Fixture {
         }
     }
 
+    // pub fn flow_rate_tw(&self) -> f64 {
+    //     match self.water_use_type {
+    //         WaterUseType::ColdAndHeatedWater => match self.flow_rate_tw {
+    //             Some(q) => q,
+    //             None => 0.0,
+    //         },
+    //         _ => 0.0,
+    //     }
+    // }
+    //
+    // pub fn flow_rate_hw<'a>(
+    //     &self,
+    //     fixture_props: &'a FixtureProps,
+    //     temp_props: &'a TempProps,
+    // ) -> f64 {
+    //     // get fixture full fixture flow_rate
+    //     let flow_rate = match self.flow_rate_tw {
+    //         Some(q_tw) => q_tw,
+    //         None => 0.0,
+    //     };
+    //
+    //     match self.fixture_type {
+    //         FixtureType::WashingMachine => match self.water_use_type {
+    //             WaterUseType::ColdWater => 0.0,
+    //             _ => flow_rate,
+    //         },
+    //         FixtureType::Dishwasher => match self.water_use_type {
+    //             WaterUseType::ColdWater => 0.0,
+    //             _ => flow_rate,
+    //         },
+    //         _ => calc_diversified_flow_rate(
+    //             Some(flow_rate),
+    //             fixture_props.temperature,
+    //             temp_props.cold_water_temp,
+    //             temp_props.heated_water_temp,
+    //             false,
+    //         ),
+    //     }
+    // }
+
     pub fn fixture_type(&self) -> &FixtureType {
         &self.fixture_type
     }
 
+    pub fn water_use_type(&self) -> &WaterUseType {
+        &self.water_use_type
+    }
+
     pub fn calc_p_value(&self, apts: usize, occupants: usize) -> Result<f64, String> {
-        let apts = apts.clamp(1, 20) as f64;
-        let occupants = occupants as f64;
-
-        let pk = match apts {
-            1.0 => self.coeffs.pk1,
-            _ => {
-                let pkb = self.coeffs.c1 * self.coeffs.pk1 * (apts).powf(-self.coeffs.c2);
-                let mkb = self.coeffs.c3 * (apts).powf(-self.coeffs.c4);
-                let fob = mkb * (occupants - apts);
-
-                pkb + fob
-            }
+        // validate apartments
+        if apts == 0 {
+            return Err("Number of apts must be greater than 1".into());
         };
 
+        let apts_clamp = apts.clamp(1, 20) as f64;
+        let apts = apts as f64;
+        let occupants = occupants as f64;
+
+        let pkb = match apts_clamp {
+            1.0 => self.coeffs.pk1,
+            _ => self.coeffs.c1 * self.coeffs.pk1 * apts_clamp.powf(-self.coeffs.c2),
+        };
+
+        let mkb = self.coeffs.c3 * apts.powf(-self.coeffs.c4);
+        let fob = mkb * (occupants - apts);
+
+        let pk = pkb + fob;
         Ok(pk)
     }
 
@@ -80,7 +132,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::Shower,
             water_use_type: WaterUseType::ColdAndHeatedWater,
-            n: Some(1),
+            n: None,
             p: Some(0.061),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -99,7 +151,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::Bath,
             water_use_type: WaterUseType::ColdAndHeatedWater,
-            n: Some(1),
+            n: None,
             p: Some(0.006),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -118,7 +170,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::Toilet,
             water_use_type: WaterUseType::ColdWater,
-            n: Some(1),
+            n: None,
             p: Some(0.002),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -126,7 +178,7 @@ impl Fixture {
             coeffs: ProbabiltyCoeffs {
                 pk1: 0.002,
                 c1: 1.0,
-                c2: 1.0,
+                c2: 0.0,
                 c3: 0.002,
                 c4: 0.880,
             },
@@ -137,7 +189,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::TapBasin,
             water_use_type: WaterUseType::ColdAndHeatedWater,
-            n: Some(1),
+            n: None,
             p: Some(0.009),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -145,7 +197,7 @@ impl Fixture {
             coeffs: ProbabiltyCoeffs {
                 pk1: 0.009,
                 c1: 1.0,
-                c2: 1.0,
+                c2: 0.0,
                 c3: 0.004,
                 c4: 0.880,
             },
@@ -156,7 +208,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::TapKitchen,
             water_use_type: WaterUseType::ColdAndHeatedWater,
-            n: Some(1),
+            n: None,
             p: Some(0.009),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -164,7 +216,7 @@ impl Fixture {
             coeffs: ProbabiltyCoeffs {
                 pk1: 0.009,
                 c1: 1.0,
-                c2: 1.0,
+                c2: 0.0,
                 c3: 0.004,
                 c4: 0.880,
             },
@@ -175,7 +227,7 @@ impl Fixture {
         Self {
             fixture_type: FixtureType::TapLaundry,
             water_use_type: WaterUseType::ColdAndHeatedWater,
-            n: Some(1),
+            n: None,
             p: Some(0.009),
             flow_rate_tw: None,
             flow_rate_cw: None,
@@ -183,8 +235,46 @@ impl Fixture {
             coeffs: ProbabiltyCoeffs {
                 pk1: 0.009,
                 c1: 1.0,
-                c2: 1.0,
+                c2: 0.0,
                 c3: 0.004,
+                c4: 0.880,
+            },
+        }
+    }
+
+    pub fn washing_machine() -> Self {
+        Self {
+            fixture_type: FixtureType::WashingMachine,
+            water_use_type: WaterUseType::ColdAndHeatedWater,
+            n: None,
+            p: Some(0.031),
+            flow_rate_tw: None,
+            flow_rate_cw: None,
+            flow_rate_hw: None,
+            coeffs: ProbabiltyCoeffs {
+                pk1: 0.031,
+                c1: 0.976,
+                c2: 0.515,
+                c3: 0.005,
+                c4: 1.349,
+            },
+        }
+    }
+
+    pub fn dishwasher() -> Self {
+        Self {
+            fixture_type: FixtureType::Dishwasher,
+            water_use_type: WaterUseType::ColdAndHeatedWater,
+            n: None,
+            p: Some(0.001),
+            flow_rate_tw: None,
+            flow_rate_cw: None,
+            flow_rate_hw: None,
+            coeffs: ProbabiltyCoeffs {
+                pk1: 0.001,
+                c1: 1.0,
+                c2: 0.0,
+                c3: 0.0005,
                 c4: 0.880,
             },
         }
