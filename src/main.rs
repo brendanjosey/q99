@@ -1,12 +1,7 @@
-// src/main.rs
 mod app;
 mod screens;
 mod components;
 mod props;
-// mod services;
-// mod api;
-// mod components;
-
 use app::App;
 
 fn main() -> iced::Result {
