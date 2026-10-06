@@ -4,7 +4,10 @@
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
 **Research conducted by: Deakin University**
+- Cold water demand investigation: https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001625
+- Peak demand formula: https://ascelibrary.org/doi/10.1061/JWRMD5.WRENG-6146
 
+## Features
 ***Follows Verification Method formula in the NCC 2025 Volume 3***  
 - Codified approach, see Clause XX.X
 
