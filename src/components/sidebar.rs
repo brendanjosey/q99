@@ -1,4 +1,3 @@
-// src/sidebar.rs
 use iced::widget::{button, column, container, text};
 use iced::{Element, Fill};
 
