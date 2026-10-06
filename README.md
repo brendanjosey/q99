@@ -3,8 +3,10 @@ Project intiative driven by: The Hydraulic Consultants of Australasia Pty Ltd
 - Main site: https://hcaa.org.au/  
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
-Research conducted by: Deakin University  
-Follows Verification Method formula in the NCC 2025 Volume 3 
+Research conducted by: Deakin University 
+
+***Follows Verification Method formula in the NCC 2025 Volume 3***  
+- Codified approach, see Clause XX.X
 
 ***Size your residential projects with a modern and accurate peak demand formula!***  
 - The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
