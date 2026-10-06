@@ -4,7 +4,7 @@ Research conducted by: Deakin University
 Follows Verification method formula in the NCC 2025 Volume 3  
 
 ## Size your residential projects with a modern and accurate peak demand formula!
-The new formula can estimate the 99th percentile demand for cold and heated water consumption.
+The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
 All work is backed by peer reviewed research by Deakin University to better understand how we use water in Australian residential buildings.  
 
   
