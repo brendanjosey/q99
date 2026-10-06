@@ -1,6 +1,5 @@
 # Demands
-**Project intiative driven by: The Hydraulic Consultants of Australasia Pty Ltd**
-- Main site: https://hcaa.org.au/  
+**Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/) **
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
 **Research conducted by: Deakin University**
@@ -41,4 +40,4 @@
 The application is provided free and open source with all source code visible for review. Although care has been taken to ensure the accuracy, completeness, and reliability of "demands" ('Software'), the Developer nor any other party makes any warranties, express or implied, or representations regarding the accuracy of the Software. The Developer nor any other party assumes any liability or responsibility for any errors or omissions in the information contained in or output by the Software. The Developer nor any other party assumes any responsibility for the consequences of using such information, nor for any infringement of third-party intellectual property rights that may result from its use.
 The Developer recommends that any user of this Software reads and reviews the data and papers written as part of the development of this method to determine the Residential 99th percentile demands within Australian (Class 2) buildings.
 ## License
-Demands is released under the MIT License.
+Demands is released under the [MIT License](https://opensource.org/licenses/MIT).
