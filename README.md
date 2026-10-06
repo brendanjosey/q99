@@ -22,7 +22,6 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 ***Save money, reduce energy and improve water quality!***  
 - The research has shown current provisions of AS/NZS 3500 significantly overestimate the peak demand.
 - This leads to oversized plumbing networks that are costly to build, are inefficient to run and lead to increase stagnation and low flow velocity that can introduce water quality risks.  
-(add image)  
 
 ***Generate documentation for your performance solution!***  
 - Generate a table of results to append to your performance solution.    
