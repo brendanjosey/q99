@@ -29,7 +29,10 @@ Research conducted by: Deakin University
 ***Free desktop software with no accounts needed!***  
 - Don't want to install before trying - test using the web version here....  
 
-## INSTALLATION
+## Roadmap
+- Got a feature request? post a issue above.
+
+## Installation
 
 ## DISCLAIMER
 The application is provided free and open source with all source code visible for review. Although care has been taken to ensure the accuracy, completeness, and reliability of "demands" ('Software'), the Developer nor any other party makes any warranties, express or implied, or representations regarding the accuracy of the Software. The Developer nor any other party assumes any liability or responsibility for any errors or omissions in the information contained in or output by the Software. The Developer nor any other party assumes any responsibility for the consequences of using such information, nor for any infringement of third-party intellectual property rights that may result from its use.
