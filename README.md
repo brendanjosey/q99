@@ -1,7 +1,8 @@
 # Demands
 Project intiative driven by: The Hydraulic Consultants of Australasia Pty Ltd  
 - Main site: https://hcaa.org.au/  
-- Water Demand Investigation Project: https://www.waterdemand.com.au/  
+- Water Demand Investigation Project: https://www.waterdemand.com.au/
+  
 Research conducted by: Deakin University  
 Follows Verification Method formula in the NCC 2025 Volume 3 
 
