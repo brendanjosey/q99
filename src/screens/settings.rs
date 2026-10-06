@@ -1,4 +1,3 @@
-// src/screens/project_details.rs
 use iced::widget::{button, column, text};
 use iced::{Element, Task};
 
