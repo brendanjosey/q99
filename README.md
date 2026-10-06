@@ -9,14 +9,14 @@ All work is backed by peer reviewed research by Deakin University to better unde
 
   
 ## No more imaginary "loading" or "fixture" units.
-The new formula uses tangible fixture flow rate values. 
+The new formula uses tangible fixture flow rate values.  
 This enables water demand estimates to adapt as plumbing fixture change over time.  
 
 ## Save money, reduce energy and improve water quality!
-The research has shown current provisions of AS/NZS 3500 significantly overestimate the peak demand, leading to oversized plumbing networks that are costly to build, are inefficient to run and lead to increase stagnation and low flow velocity that can introduce water quality risks.
+The research has shown current provisions of AS/NZS 3500 significantly overestimate the peak demand, leading to oversized plumbing networks that are costly to build, are inefficient to run and lead to increase stagnation and low flow velocity that can introduce water quality risks.  
 (add image)
 
 ## Generate documentation for your perfromance solution!
-Generate a table of results to append to your performance solution.
+Generate a table of results to append to your performance solution.  
 The HCAA have even developed a performance template with all supporting information and formulas so that you don't have to.  
 
