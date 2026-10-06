@@ -1,4 +1,4 @@
-# demands
+# Demands
 Project intiative driven by: The Hydraulic Consultants of Australasia  
 Research conducted by: Deakin University  
 Follows Verification Method formula in the NCC 2025 Volume 3 
