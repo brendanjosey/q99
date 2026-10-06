@@ -33,7 +33,7 @@
 - Don't want to install before trying - test using the web version here....  
 
 ## Roadmap
-- Got a feature request? post an issue above. Keep in mind this is done on my own time.  
+- Got a feature request? Post an issue above. Keep in mind this is done on my own time.  
 
 ## Installation
 
