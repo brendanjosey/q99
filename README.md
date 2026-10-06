@@ -1,5 +1,5 @@
 # Demands
-**Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/) **
+Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/)
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
 **Research conducted by: Deakin University**
