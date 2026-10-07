@@ -482,12 +482,12 @@ impl DemandPanel {
         let content_col = column![
             inputs_row,
             // rule::horizontal(1),
-            text("Pipe Sizing: Total Water Demand").size(12),
+            text("Pipe Sizing: Total Water Demand"),
             self.pipe_size_panel
                 .view(&self.dp_results.q_tw)
                 .map(move |message| Message::PipeSizePanel(message)),
             space().height(5),
-            text("Pipe Sizing: Heated Water Demand").size(12),
+            text("Pipe Sizing: Heated Water Demand"),
             self.pipe_size_panel_hw
                 .view(&self.dp_results.q_hw)
                 .map(move |message| Message::PipeSizePanelHw(message)),
