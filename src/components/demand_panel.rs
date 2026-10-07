@@ -492,10 +492,10 @@ impl DemandPanel {
                 .view(&self.dp_results.q_hw)
                 .map(move |message| Message::PipeSizePanelHw(message)),
             space().height(5),
-            text("Pipe Sizing: Cold Water Demand").size(12),
-            self.pipe_sizw_panel_cw
-                .view(&self.dp_results.q_cw)
-                .map(move |message| Message::PipeSizePanelCw(message)),
+            // text("Pipe Sizing: Cold Water Demand").size(12),
+            // self.pipe_sizw_panel_cw
+            //     .view(&self.dp_results.q_cw)
+            //     .map(move |message| Message::PipeSizePanelCw(message)),
             row![
                 space().width(Fill),
                 button(text("Delete").size(12)).on_press(Message::Delete),
