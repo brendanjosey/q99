@@ -1,4 +1,4 @@
-use iced::widget::{column, pick_list, row, rule, space, text, text_input};
+use iced::widget::{pick_list, row, space, text, text_input};
 use iced::{Center, Element, Fill, Task};
 use std::f64::consts::PI;
 
@@ -11,8 +11,8 @@ pub struct PipeSizePanel {
     pipe_dia_aus_pex: Option<AusPexPipeDia>,
     continuous_flow_rate_str: String,
     continuous_flow_rate: Option<f64>,
-    velocity_str: String,
-    velocity: Option<f64>,
+    // velocity_str: String,
+    // velocity: Option<f64>,
 }
 
 #[derive(Debug, Clone)]
@@ -84,11 +84,17 @@ impl PipeSizePanel {
 
         let pipe_dia: Element<'_, Message> = match &self.pipe_material {
             Some(PipeMaterial::Copper) => match &self.pipe_dia_copper {
-                Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia())).width(70).into(),
+                Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia()))
+                    .size(12)
+                    .width(70)
+                    .into(),
                 _ => text("").width(70).into(),
             },
             Some(PipeMaterial::AusPex) => match &self.pipe_dia_aus_pex {
-                Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia())).width(70).into(),
+                Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia()))
+                    .size(12)
+                    .width(70)
+                    .into(),
                 _ => text("").width(70).into(),
             },
             _ => text("").width(70).into(),
@@ -129,30 +135,31 @@ impl PipeSizePanel {
                         (q + qc),
                         (flow / a)
                     ))
+                    .size(12)
                     .width(230)
                 }
-                _ => text("Velocity: N/A").width(230),
+                _ => text("Velocity: N/A").size(12).width(230),
             };
 
             v
         };
 
         row![
-            text("Pipe Material:"),
+            text("Pipe Material:").size(12),
             pipe_material,
             space().width(20),
-            text("Pipe Diameter:"),
+            text("Pipe Diameter:").size(12),
             pipe_dia_dd,
             pipe_dia,
             space().width(20),
-            text("Continuouse Flow:"),
+            text("Continuouse Flow:").size(12),
             cont_flow,
-            text("L/s"),
+            text("L/s").size(12),
             space().width(Fill),
             velocity(),
         ]
         .spacing(5)
-        .width(Fill)
+        .width(1200)
         .align_y(Center)
         .into()
     }

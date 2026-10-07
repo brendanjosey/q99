@@ -23,7 +23,7 @@ pub struct DemandPanel {
     dp_results: DemandPanelResults,
     pipe_size_panel: PipeSizePanel,
     pipe_size_panel_hw: PipeSizePanel,
-    pipe_sizw_panel_cw: PipeSizePanel,
+    //pipe_size_panel_cw: PipeSizePanel,
 }
 
 #[derive(Debug, Clone)]
@@ -35,7 +35,7 @@ pub enum Message {
     FixtureQtyChanged(FixtureType, String),
     PipeSizePanel(PipeSizePanelMessage),
     PipeSizePanelHw(PipeSizePanelMessage),
-    PipeSizePanelCw(PipeSizePanelMessage),
+    // PipeSizePanelCw(PipeSizePanelMessage),
     Delete,
 }
 
@@ -70,7 +70,7 @@ impl DemandPanel {
             dp_results: DemandPanelResults::default(),
             pipe_size_panel: PipeSizePanel::default(),
             pipe_size_panel_hw: PipeSizePanel::default(),
-            pipe_sizw_panel_cw: PipeSizePanel::default(),
+            // pipe_size_panel_cw: PipeSizePanel::default(),
         }
     }
 
@@ -281,9 +281,9 @@ impl DemandPanel {
                 let _ = self.pipe_size_panel_hw.update(message);
             }
 
-            Message::PipeSizePanelCw(message) => {
-                let _ = self.pipe_sizw_panel_cw.update(message);
-            }
+            // Message::PipeSizePanelCw(message) => {
+            //     let _ = self.pipe_sizw_panel_cw.update(message);
+            // }
             Message::Delete => {}
         }
 
