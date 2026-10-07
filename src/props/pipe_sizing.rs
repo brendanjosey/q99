@@ -2,14 +2,14 @@
 pub enum PipeMaterial {
     #[default]
     Copper,
-    AusPex,
+    Pex,
 }
 
 impl std::fmt::Display for PipeMaterial {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
             Self::Copper => "Copper",
-            Self::AusPex => "Pex - AusPex",
+            Self::Pex => "PEX",
         })
     }
 }
@@ -23,6 +23,13 @@ pub enum CopperPipeDia {
     DN32,
     DN40,
     DN50,
+    DN65,
+    DN80,
+    DN90,
+    DN100,
+    DN125,
+    DN150,
+    DN200,
 }
 
 impl std::fmt::Display for CopperPipeDia {
@@ -35,6 +42,13 @@ impl std::fmt::Display for CopperPipeDia {
             Self::DN32 => "DN32",
             Self::DN40 => "DN40",
             Self::DN50 => "DN50",
+            Self::DN65 => "DN65",
+            Self::DN80 => "DN80",
+            Self::DN90 => "DN90",
+            Self::DN100 => "DN100",
+            Self::DN125 => "DN125",
+            Self::DN150 => "DN150",
+            Self::DN200 => "DN200",
         };
         f.write_str(name)
     }
@@ -43,7 +57,7 @@ impl std::fmt::Display for CopperPipeDia {
 // impl std::fmt::Display for CopperPipeDia {}
 
 impl CopperPipeDia {
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 14] = [
         Self::DN15,
         Self::DN18,
         Self::DN20,
@@ -51,6 +65,13 @@ impl CopperPipeDia {
         Self::DN32,
         Self::DN40,
         Self::DN50,
+        Self::DN65,
+        Self::DN80,
+        Self::DN90,
+        Self::DN100,
+        Self::DN125,
+        Self::DN150,
+        Self::DN200,
     ];
 
     pub fn pipe_dia(&self) -> f64 {
@@ -62,38 +83,78 @@ impl CopperPipeDia {
             Self::DN32 => 29.3,
             Self::DN40 => 35.7,
             Self::DN50 => 48.4,
+            Self::DN65 => 61.1,
+            Self::DN80 => 72.9,
+            Self::DN90 => 85.6,
+            Self::DN100 => 98.3,
+            Self::DN125 => 123.7,
+            Self::DN150 => 148.3,
+            Self::DN200 => 199.1,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum AusPexPipeDia {
+pub enum PexPipeDia {
     DN16,
     DN20,
     DN25,
     DN32,
+    DN40,
+    DN50,
+    DN63,
+    DN75,
+    DN90,
+    DN110,
+    DN125,
 }
 
-impl std::fmt::Display for AusPexPipeDia {
+impl std::fmt::Display for PexPipeDia {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let name = match self {
             Self::DN16 => "DN16",
             Self::DN20 => "DN20",
             Self::DN25 => "DN25",
             Self::DN32 => "DN32",
+            Self::DN40 => "DN40",
+            Self::DN50 => "DN50",
+            Self::DN63 => "DN63",
+            Self::DN75 => "DN75",
+            Self::DN90 => "DN90",
+            Self::DN110 => "DN110",
+            Self::DN125 => "DN125",
         };
         f.write_str(name)
     }
 }
-impl AusPexPipeDia {
-    pub const ALL: [Self; 4] = [Self::DN16, Self::DN20, Self::DN25, Self::DN32];
+impl PexPipeDia {
+    pub const ALL: [Self; 11] = [
+        Self::DN16,
+        Self::DN20,
+        Self::DN25,
+        Self::DN32,
+        Self::DN40,
+        Self::DN50,
+        Self::DN63,
+        Self::DN75,
+        Self::DN90,
+        Self::DN110,
+        Self::DN125,
+    ];
 
     pub fn pipe_dia(&self) -> f64 {
         match self {
-            Self::DN16 => 11.9,
-            Self::DN20 => 15.2,
-            Self::DN25 => 19.2,
-            Self::DN32 => 24.5,
+            Self::DN16 => 12.7,
+            Self::DN20 => 15.7,
+            Self::DN25 => 19.7,
+            Self::DN32 => 25.1,
+            Self::DN40 => 31.4,
+            Self::DN50 => 39.3,
+            Self::DN63 => 49.4,
+            Self::DN75 => 58.6,
+            Self::DN90 => 70.7,
+            Self::DN110 => 86.4,
+            Self::DN125 => 98.2,
         }
     }
 }

@@ -2,13 +2,13 @@ use iced::widget::{pick_list, row, space, text, text_input};
 use iced::{Center, Element, Fill, Task};
 use std::f64::consts::PI;
 
-use crate::props::pipe_sizing::{AusPexPipeDia, CopperPipeDia, PipeMaterial};
+use crate::props::pipe_sizing::{CopperPipeDia, PexPipeDia, PipeMaterial};
 
 #[derive(Default, Debug, Clone)]
 pub struct PipeSizePanel {
     pipe_material: Option<PipeMaterial>,
     pipe_dia_copper: Option<CopperPipeDia>,
-    pipe_dia_aus_pex: Option<AusPexPipeDia>,
+    pipe_dia_aus_pex: Option<PexPipeDia>,
     continuous_flow_rate_str: String,
     continuous_flow_rate: Option<f64>,
     // velocity_str: String,
@@ -19,7 +19,7 @@ pub struct PipeSizePanel {
 pub enum Message {
     PipeMaterialChanged(PipeMaterial),
     CopperPipeDiaChanged(CopperPipeDia),
-    AusPexDiaChanged(AusPexPipeDia),
+    AusPexDiaChanged(PexPipeDia),
     ContFlowChanged(String),
 }
 
@@ -59,7 +59,7 @@ impl PipeSizePanel {
     ) -> Element<'a, Message> {
         //
         let pipe_material = pick_list(
-            [PipeMaterial::Copper, PipeMaterial::AusPex],
+            [PipeMaterial::Copper, PipeMaterial::Pex],
             self.pipe_material.clone(),
             Message::PipeMaterialChanged,
         );
@@ -72,8 +72,8 @@ impl PipeSizePanel {
             )
             .width(150)
             .into(),
-            Some(PipeMaterial::AusPex) => pick_list(
-                AusPexPipeDia::ALL,
+            Some(PipeMaterial::Pex) => pick_list(
+                PexPipeDia::ALL,
                 self.pipe_dia_aus_pex.clone(),
                 Message::AusPexDiaChanged,
             )
@@ -90,7 +90,7 @@ impl PipeSizePanel {
                     .into(),
                 _ => text("").width(70).into(),
             },
-            Some(PipeMaterial::AusPex) => match &self.pipe_dia_aus_pex {
+            Some(PipeMaterial::Pex) => match &self.pipe_dia_aus_pex {
                 Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia()))
                     .size(12)
                     .width(70)
@@ -111,7 +111,7 @@ impl PipeSizePanel {
                     Some(pipe) => Some(pipe.pipe_dia()),
                     None => None,
                 },
-                Some(PipeMaterial::AusPex) => match &self.pipe_dia_aus_pex {
+                Some(PipeMaterial::Pex) => match &self.pipe_dia_aus_pex {
                     Some(pipe) => Some(pipe.pipe_dia()),
                     None => None,
                 },
