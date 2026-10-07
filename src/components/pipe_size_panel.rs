@@ -19,7 +19,7 @@ pub struct PipeSizePanel {
 pub enum Message {
     PipeMaterialChanged(PipeMaterial),
     CopperPipeDiaChanged(CopperPipeDia),
-    AusPexDiaChanged(PexPipeDia),
+    PexDiaChanged(PexPipeDia),
     ContFlowChanged(String),
 }
 
@@ -34,7 +34,7 @@ impl PipeSizePanel {
                 self.pipe_dia_copper = Some(value);
             }
 
-            Message::AusPexDiaChanged(value) => {
+            Message::PexDiaChanged(value) => {
                 self.pipe_dia_aus_pex = Some(value);
             }
 
@@ -75,7 +75,7 @@ impl PipeSizePanel {
             Some(PipeMaterial::Pex) => pick_list(
                 PexPipeDia::ALL,
                 self.pipe_dia_aus_pex.clone(),
-                Message::AusPexDiaChanged,
+                Message::PexDiaChanged,
             )
             .width(150)
             .into(),
