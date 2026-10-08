@@ -17,7 +17,7 @@ pub struct DemandPanel {
     fixtures: [Fixture; 8],
     q_total: String,
     q_tw: String,
-    q_cw: String,
+    // q_cw: String, for later extensions as designeers become more proficient with new method.
     q_hw: String,
     p0: String,
     dp_results: DemandPanelResults,
@@ -47,7 +47,7 @@ impl DemandPanel {
     pub fn new() -> Self {
         Self {
             //panel_id: short_id_ordered(),
-            panel_name: String::from("New Demand Panel"),
+            panel_name: String::new(),
             is_expanded: true,
             n_apts: String::new(),
             n_occupants: String::new(),
@@ -64,7 +64,7 @@ impl DemandPanel {
             ],
             q_total: String::new(),
             q_tw: String::new(),
-            q_cw: String::new(),
+            //q_cw: String::new(),
             q_hw: String::new(),
             p0: String::new(),
             dp_results: DemandPanelResults::default(),
@@ -209,17 +209,17 @@ impl DemandPanel {
                     self.dp_results.q_hw = None;
                 }
             }
-            //println!("cold water demands");
-            match self.calc_q99(fixture_props, temp_props, FlowType::ColdWaterDemand) {
-                Ok(Some(q)) => {
-                    self.q_cw = format!("{:.2}L/s", q);
-                    self.dp_results.q_cw = Some(q);
-                }
-                _ => {
-                    self.q_cw = "N/A".to_string();
-                    self.dp_results.q_cw = None;
-                }
-            }
+            //todo - add back in when industry advances...
+            // match self.calc_q99(fixture_props, temp_props, FlowType::ColdWaterDemand) {
+            //     Ok(Some(q)) => {
+            //         self.q_cw = format!("{:.2}L/s", q);
+            //         self.dp_results.q_cw = Some(q);
+            //     }
+            //     _ => {
+            //         self.q_cw = "N/A".to_string();
+            //         self.dp_results.q_cw = None;
+            //     }
+            // }
         }
     }
 
@@ -293,14 +293,14 @@ impl DemandPanel {
     pub fn view<'a>(&self, fixture_props: &'a [FixtureProps; 8]) -> Element<'_, Message> {
         let panel_name: Element<'_, Message> = if self.is_expanded {
             text_input("Enter panel name...", &self.panel_name)
-                .width(300)
+                //.width(300)
                 .on_input(Message::PanelNameChanged)
                 .into()
         } else {
             if self.panel_name.len() > 0 {
-                text(&self.panel_name).width(300).into()
+                text(&self.panel_name).into()
             } else {
-                text("Demand Panel").width(300).into()
+                text("Demand Panel").into()
             }
         };
 
@@ -440,7 +440,7 @@ impl DemandPanel {
                 .align_x(Right),
             // 99th percentile demands
             text(format!(
-                "99th Percentile Demand - Cold & Heated Water: {}",
+                "99th Percentile Demand - Cold Water: {}",
                 &self.q_tw
             ))
             .size(12)
@@ -453,13 +453,13 @@ impl DemandPanel {
             .size(12)
             .width(Fill)
             .align_x(Right),
-            text(format!(
-                "99th Percentile Demand - Cold Water: {}",
-                &self.q_cw
-            ))
-            .size(12)
-            .width(Fill)
-            .align_x(Right),
+            // text(format!(
+            //     "99th Percentile Demand - Cold Water: {}",
+            //     &self.q_cw
+            // ))
+            // .size(12)
+            // .width(Fill)
+            // .align_x(Right),
             //button("Delete").on_press(Message::Delete),
         ]
         .spacing(5)
@@ -476,7 +476,7 @@ impl DemandPanel {
         ]
         .spacing(10)
         .align_y(Center)
-        .height(200)
+        .height(140)
         .width(Fill);
 
         let content_col = column![
@@ -510,15 +510,44 @@ impl DemandPanel {
             space().height(0).into()
         };
 
+        let apts_text = if self.n_apts.is_empty() {
+            text("Apartments: N/A")
+        } else {
+            text(format!("Apartments: {}", &self.n_apts))
+        };
+
+        let occs_text = if self.n_apts.is_empty() {
+            text("Occupants: N/A")
+        } else {
+            text(format!("Occupants: {}", &self.n_occupants))
+        };
+
+        let q99_cw_text = if self.q_tw.is_empty() {
+            text("")
+        } else {
+            text(format!("Q₉₉ - Cold Water: {}", &self.q_tw))
+        };
+
+        let q99_hw_text = if self.q_hw.is_empty() {
+            text("")
+        } else {
+            text(format!("Q₉₉ - Heated Water: {}", &self.q_hw))
+        };
+
         let header_row = row![
             panel_name,
-            space().width(Fill),
-            text(format!("Apartments: {}", &self.n_apts)),
-            text(format!("Occupants: {}", &self.n_occupants)),
+            rule::vertical(1),
             text(format!("Fixtures: {}", &self.n_fixtures)),
+            apts_text,
+            occs_text,
+            space().width(Fill),
+            q99_cw_text,
+            rule::vertical(1),
+            q99_hw_text,
             toggle_btn,
         ]
         .spacing(10)
+        .align_y(Center)
         .width(Fill);
 
         container(

@@ -8,7 +8,7 @@ use crate::props::pipe_sizing::{CopperPipeDia, PexPipeDia, PipeMaterial};
 pub struct PipeSizePanel {
     pipe_material: Option<PipeMaterial>,
     pipe_dia_copper: Option<CopperPipeDia>,
-    pipe_dia_aus_pex: Option<PexPipeDia>,
+    pipe_dia_pex: Option<PexPipeDia>,
     continuous_flow_rate_str: String,
     continuous_flow_rate: Option<f64>,
     // velocity_str: String,
@@ -35,7 +35,7 @@ impl PipeSizePanel {
             }
 
             Message::PexDiaChanged(value) => {
-                self.pipe_dia_aus_pex = Some(value);
+                self.pipe_dia_pex = Some(value);
             }
 
             Message::ContFlowChanged(value) => {
@@ -64,22 +64,26 @@ impl PipeSizePanel {
             Message::PipeMaterialChanged,
         );
 
-        let pipe_dia_dd: Element<'_, Message> = match self.pipe_material {
-            Some(PipeMaterial::Copper) => pick_list(
-                CopperPipeDia::ALL,
-                self.pipe_dia_copper.clone(),
-                Message::CopperPipeDiaChanged,
-            )
-            .width(150)
-            .into(),
-            Some(PipeMaterial::Pex) => pick_list(
-                PexPipeDia::ALL,
-                self.pipe_dia_aus_pex.clone(),
-                Message::PexDiaChanged,
-            )
-            .width(150)
-            .into(),
-            _ => text("").width(150).into(),
+        let pipe_dia_dd: Element<'_, Message> = if self.pipe_material != None {
+            match self.pipe_material {
+                Some(PipeMaterial::Copper) => pick_list(
+                    CopperPipeDia::ALL,
+                    self.pipe_dia_copper.clone(),
+                    Message::CopperPipeDiaChanged,
+                )
+                .width(150)
+                .into(),
+                Some(PipeMaterial::Pex) => pick_list(
+                    PexPipeDia::ALL,
+                    self.pipe_dia_pex.clone(),
+                    Message::PexDiaChanged,
+                )
+                .width(150)
+                .into(),
+                _ => text("").width(150).into(),
+            }
+        } else {
+            text("").into()
         };
 
         let pipe_dia: Element<'_, Message> = match &self.pipe_material {
@@ -90,7 +94,7 @@ impl PipeSizePanel {
                     .into(),
                 _ => text("").width(70).into(),
             },
-            Some(PipeMaterial::Pex) => match &self.pipe_dia_aus_pex {
+            Some(PipeMaterial::Pex) => match &self.pipe_dia_pex {
                 Some(pipe) => text(format!("{:.1}mm", pipe.pipe_dia()))
                     .size(12)
                     .width(70)
@@ -100,9 +104,29 @@ impl PipeSizePanel {
             _ => text("").width(70).into(),
         };
 
-        let cont_flow = text_input("", &self.continuous_flow_rate_str)
-            .on_input(Message::ContFlowChanged)
-            .width(70);
+        let cont_flow: Element<'_, Message> = match &self.pipe_material {
+            Some(PipeMaterial::Copper) => {
+                if self.pipe_dia_copper != None {
+                    text_input("", &self.continuous_flow_rate_str)
+                        .on_input(Message::ContFlowChanged)
+                        .width(70)
+                        .into()
+                } else {
+                    text("").into()
+                }
+            }
+            Some(PipeMaterial::Pex) => {
+                if self.pipe_dia_pex != None {
+                    text_input("", &self.continuous_flow_rate_str)
+                        .on_input(Message::ContFlowChanged)
+                        .width(70)
+                        .into()
+                } else {
+                    text("").into()
+                }
+            }
+            None => text("").into(),
+        };
 
         let velocity = || {
             // pipe diameter
@@ -111,7 +135,7 @@ impl PipeSizePanel {
                     Some(pipe) => Some(pipe.pipe_dia()),
                     None => None,
                 },
-                Some(PipeMaterial::Pex) => match &self.pipe_dia_aus_pex {
+                Some(PipeMaterial::Pex) => match &self.pipe_dia_pex {
                     Some(pipe) => Some(pipe.pipe_dia()),
                     None => None,
                 },
@@ -136,9 +160,8 @@ impl PipeSizePanel {
                         (flow / a)
                     ))
                     .size(12)
-                    .width(230)
                 }
-                _ => text("Velocity: N/A").size(12).width(230),
+                _ => text("Velocity: ").size(12),
             };
 
             v
@@ -159,7 +182,7 @@ impl PipeSizePanel {
             velocity(),
         ]
         .spacing(5)
-        .width(1200)
+        .width(Fill)
         .align_y(Center)
         .into()
     }

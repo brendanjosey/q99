@@ -13,6 +13,10 @@ use crate::props::fixtures::FixtureType;
 pub struct State {
     project_name: String,
     project_description: String,
+    project_date: String,
+    project_client: String,
+    project_revision: String,
+    project_job_number: String,
     demand_panels: Vec<DemandPanel>,
     temp_props: TempProps,
     fixture_props: [FixtureProps; 8],
@@ -23,6 +27,10 @@ impl Default for State {
         Self {
             project_name: String::new(),
             project_description: String::new(),
+            project_date: String::new(),
+            project_client: String::new(),
+            project_revision: String::new(),
+            project_job_number: String::new(),
             demand_panels: Vec::new(),
             temp_props: TempProps::default(),
             fixture_props: FixtureProps::all(),
@@ -34,13 +42,17 @@ impl Default for State {
 pub enum Message {
     ProjectNameChanged(String),
     ProjectDescriptionChanged(String),
+    ProjectDateChanged(String),
+    ProjectClientChanged(String),
+    ProjectRevChanged(String),
+    ProjectJobChanged(String),
     ColdWaterTempChanged(String),
     HeatedWaterTempChanged(String),
     FlowRateChanged(FixtureType, String),
     TemperatureChanged(FixtureType, String),
     WaterUseTypeChanged(FixtureType, WaterUseType),
     DemandPanel(usize, DemandPanelMessage),
-    AddDemandPanel, //EndUsePropsChanged,
+    AddDemandPanel,
 }
 
 impl State {
@@ -52,6 +64,22 @@ impl State {
 
             Message::ProjectDescriptionChanged(description) => {
                 self.project_description = description;
+            }
+
+            Message::ProjectDateChanged(value) => {
+                self.project_date = value;
+            }
+
+            Message::ProjectClientChanged(value) => {
+                self.project_client = value;
+            }
+
+            Message::ProjectRevChanged(value) => {
+                self.project_revision = value;
+            }
+
+            Message::ProjectJobChanged(value) => {
+                self.project_job_number = value;
             }
 
             Message::ColdWaterTempChanged(value) => {
@@ -170,21 +198,71 @@ impl State {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        //
+        // project details
+        let pd_job = row![
+            text("Job Number:").size(12).width(150).align_x(Right),
+            text_input("Job number...", &self.project_job_number)
+                .width(150)
+                .on_input(Message::ProjectJobChanged),
+            space().width(Fill),
+            text("Revision:").size(12),
+            text_input("Revision...", &self.project_revision)
+                .width(100)
+                .on_input(Message::ProjectRevChanged),
+            text("Date:").size(12),
+            text_input("Date...", &self.project_date)
+                .width(100)
+                .on_input(Message::ProjectDateChanged)
+        ]
+        .align_y(Center)
+        .width(Fill)
+        .spacing(5);
+
+        let pd_client = row![
+            text("Project Client:").size(12).width(150).align_x(Right),
+            text_input("Enter the project client...", &self.project_name,)
+                .on_input(Message::ProjectClientChanged),
+        ]
+        .align_y(Center)
+        .width(Fill)
+        .spacing(5);
+
+        let pd_name = row![
+            text("Project name:").size(12).width(150).align_x(Right),
+            text_input("Enter the project name...", &self.project_name,)
+                .on_input(Message::ProjectNameChanged),
+        ]
+        .align_y(Center)
+        .width(Fill)
+        .spacing(5);
+
+        let pd_desc = row![
+            text("Description:").size(12).width(150).align_x(Right),
+            text_input(
+                "Enter the project description...",
+                &self.project_description,
+            )
+            .on_input(Message::ProjectDescriptionChanged),
+        ]
+        .align_y(Center)
+        .width(Fill)
+        .spacing(5);
+
+        // water temp inputs
         let water_temp_inputs_row = row![
-            text("Cold Water Temperature: "),
+            text("Cold Water Temperature: ").size(12),
             text_input("Cold water temp", &self.temp_props.cold_water_temp_str)
                 .on_input(Message::ColdWaterTempChanged)
                 .align_x(Center)
                 .width(70),
-            text("°C"),
+            text("°C").size(12),
             space().width(20),
-            text("Heated Water Temperature: "),
+            text("Heated Water Temperature: ").size(10),
             text_input("Heated water temp", &self.temp_props.heated_water_temp_str)
                 .on_input(Message::HeatedWaterTempChanged)
                 .align_x(Center)
                 .width(70),
-            text("°C"),
+            text("°C").size(12),
         ]
         .spacing(5)
         .align_y(Center)
@@ -270,58 +348,8 @@ impl State {
                 },
             };
 
-            // let temp_input = match props.water_use_type {
-            //     Some(WaterUseType::ColdAndHeatedWater) => text_input("", &props.temperature_str)
-            //         .width(70)
-            //         .align_x(Center)
-            //         .on_input(|value| {
-            //             Message::TemperatureChanged(props.fixture_type.clone(), value)
-            //         }),
-            //     Some(WaterUseType::HeatedWater) => text_input(
-            //         "",
-            //         &format!("{:.1}", self.temp_props.heated_water_temp.unwrap()),
-            //     )
-            //     .width(70)
-            //     .align_x(Center),
-            //     Some(WaterUseType::ColdWater) => text_input(
-            //         "",
-            //         &format!("{:.1}", self.temp_props.cold_water_temp.unwrap()),
-            //     )
-            //     .width(70)
-            //     .align_x(Center),
-            //     _ => text_input("", ""),
-            // };
-
             let cold_water_flow = format!("{:.2}L/s", props.flow_rate_cw(&self.temp_props));
             let heated_water_flow = format!("{:.2}L/s", props.flow_rate_hw(&self.temp_props));
-
-            // let cold_water_flow = match props.water_use_type {
-            //     Some(WaterUseType::HeatedWater) => String::from("N/A"),
-            //     _ => format!(
-            //         "{:.2}L/s",
-            //         calc_diversified_flow_rate(
-            //             props.flow_rate,
-            //             props.temperature,
-            //             self.temp_props.cold_water_temp,
-            //             self.temp_props.heated_water_temp,
-            //             true
-            //         )
-            //     ),
-            // };
-
-            // let heated_water_flow = match props.water_use_type {
-            //     Some(WaterUseType::ColdWater) => String::from("N/A"),
-            //     _ => format!(
-            //         "{:.2}L/s",
-            //         calc_diversified_flow_rate(
-            //             props.flow_rate,
-            //             props.temperature,
-            //             self.temp_props.cold_water_temp,
-            //             self.temp_props.heated_water_temp,
-            //             false,
-            //         )
-            //     ),
-            // };
 
             let inputs = column![
                 text(name).size(10).align_x(Center),
@@ -332,13 +360,6 @@ impl State {
                     .align_x(Center),
                 space().height(1),
                 temp_input,
-                // text_input("", &props.temperature_str)
-                //     .on_input(|value| Message::TemperatureChanged(
-                //         props.fixture_type.clone(),
-                //         value
-                //     ))
-                //     .width(70)
-                //     .align_x(Center),
                 space().height(3),
                 text(heated_water_flow),
                 space().height(5),
@@ -347,25 +368,6 @@ impl State {
             .spacing(2)
             .width(100)
             .align_x(Center);
-
-            // if props.fixture_type == FixtureType::WashingMachine
-            //     || props.fixture_type == FixtureType::Dishwasher
-            // {
-            //     inputs = inputs.push(text("Water Use").size(10).align_x(Center).width(Fill));
-            //     inputs = inputs.push(
-            //         pick_list(
-            //             [
-            //                 WaterUseType::ColdAndHeatedWater,
-            //                 WaterUseType::HeatedWater,
-            //                 WaterUseType::ColdWater,
-            //             ],
-            //             props.water_use_type.clone(),
-            //             |value| Message::WaterUseTypeChanged(props.fixture_type.clone(), value),
-            //         )
-            //         .width(100)
-            //         .text_size(10),
-            //     );
-            // }
 
             fixture_settings_input_row = fixture_settings_input_row.push(inputs)
         }
@@ -379,14 +381,22 @@ impl State {
             demand_panel_col = demand_panel_col.push(view);
         }
 
-        let content = column![
+        let header_row = row![
             text("Project Details").size(24),
-            text("Project name"),
-            text_input("Enter the project name", &self.project_name,)
-                .on_input(Message::ProjectNameChanged),
-            text("Description"),
-            text_input("Enter a description", &self.project_description,)
-                .on_input(Message::ProjectDescriptionChanged),
+            space().width(Fill),
+            button(text("Save").size(14)),
+            button(text("Open").size(14)),
+        ]
+        .spacing(5)
+        .align_y(Center)
+        .width(Fill);
+
+        let content = column![
+            header_row,
+            pd_job,
+            pd_client,
+            pd_name,
+            pd_desc,
             text("Water Temperature Settings").size(24),
             // cold water temp
             water_temp_inputs_row,
@@ -396,15 +406,18 @@ impl State {
             text("Demand Panels").size(24),
             demand_panel_col,
         ]
+        .width(1400)
+        .padding(15)
         .spacing(12);
         //.into()
 
-        container(
-            scrollable(content).direction(scrollable::Direction::Vertical(
-                scrollable::Scrollbar::default(),
-            )),
-        )
-        .width(Fill)
-        .into()
+        let scroll_dir = scrollable::Direction::Both {
+            vertical: scrollable::Scrollbar::default().spacing(10),
+            horizontal: scrollable::Scrollbar::default().spacing(10),
+        };
+
+        container(scrollable(content).direction(scroll_dir))
+            //.width(2000)
+            .into()
     }
 }
