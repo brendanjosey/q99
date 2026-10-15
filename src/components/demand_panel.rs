@@ -9,18 +9,18 @@ use crate::props::fixtures::{Fixture, FixtureType};
 #[derive(Debug)]
 pub struct DemandPanel {
     //panel_id: String,
-    panel_name: String,
+    pub panel_name: String,
     is_expanded: bool,
-    n_apts: String,
-    n_occupants: String,
-    n_fixtures: usize,
+    pub n_apts: String,
+    pub n_occupants: String,
+    pub n_fixtures: usize,
     fixtures: [Fixture; 8],
     q_total: String,
     q_tw: String,
     // q_cw: String, for later extensions as designeers become more proficient with new method.
     q_hw: String,
     p0: String,
-    dp_results: DemandPanelResults,
+    pub dp_results: DemandPanelResults,
     pipe_size_panel: PipeSizePanel,
     pipe_size_panel_hw: PipeSizePanel,
     //pipe_size_panel_cw: PipeSizePanel,

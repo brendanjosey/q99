@@ -1,5 +1,6 @@
-use iced::widget::{container, row};
-use iced::{Element, Fill, Task, Theme};
+use iced::Alignment::Center;
+use iced::widget::{column, container, row, text};
+use iced::{Border, Color, Element, Fill, Task, Theme};
 
 use crate::components::sidebar;
 use crate::screens::{demands, settings};
@@ -58,13 +59,47 @@ impl App {
             Screen::Settings => self.settings.view().map(Message::Settings),
         };
 
-        row![
-            sidebar,
-            container(screen).padding(24).width(Fill).height(Fill),
+        let top_bar = row![text("Q-XCIX-th: Resi"),].width(Fill).align_y(Center);
+        let bottom_bar = row![text("version: 0.1.0 (Beta)").size(10),]
+            .width(Fill)
+            .align_y(Center);
+
+        let body = container(screen)
+            .padding(24)
+            .width(Fill)
+            .height(Fill)
+            .style(|_theme| container::Style {
+                // background: Some(Background::Color(Color::WHITE)),
+                border: Border {
+                    color: Color::from_rgb8(180, 180, 180),
+                    width: 1.0,
+                    radius: 8.0.into(),
+                },
+                // shadow.. not sure if I want this.
+                // shadow: Shadow {
+                //     color: Color::from_rgba8(0, 0, 0, 0.25),
+                //     offset: Vector::new(0.0, 4.0),
+                //     blur_radius: 10.0,
+                // },
+                ..Default::default()
+            });
+
+        let sidebar_body = row![
+            sidebar, body,
+            //container(screen).padding(24).width(Fill).height(Fill),
         ]
         .width(Fill)
         .height(Fill)
-        .into()
+        .spacing(5);
+        //.padding(10);
+        //.into()
+
+        column![top_bar, sidebar_body, bottom_bar]
+            .width(Fill)
+            .height(Fill)
+            .padding(10)
+            .spacing(10)
+            .into()
     }
 
     pub fn theme(&self) -> Theme {

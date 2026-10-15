@@ -5,6 +5,10 @@ use iced::widget::{
 };
 use iced::{Center, Element, Fill, Right, Task};
 
+use polars::prelude::*;
+use polars_excel_writer::PolarsExcelWriter;
+use rfd::FileDialog;
+
 use crate::components::demand_panel::{DemandPanel, Message as DemandPanelMessage};
 use crate::props::core::{FixtureProps, TempProps, WaterUseType};
 use crate::props::fixtures::FixtureType;
@@ -53,6 +57,7 @@ pub enum Message {
     WaterUseTypeChanged(FixtureType, WaterUseType),
     DemandPanel(usize, DemandPanelMessage),
     AddDemandPanel,
+    ExportToExcel,
 }
 
 impl State {
@@ -191,6 +196,86 @@ impl State {
             Message::AddDemandPanel => {
                 let dp = DemandPanel::new();
                 self.demand_panels.push(dp);
+            }
+
+            Message::ExportToExcel => {
+                if self.demand_panels.is_empty() != true {
+                    let mut name_col = Vec::new();
+                    let mut service_col = Vec::new();
+                    let mut n_fixtures_col = Vec::new();
+                    let mut n_apts_col = Vec::new();
+                    let mut n_occs_col = Vec::new();
+                    let mut flow_rate_col = Vec::new();
+
+                    for panel in &self.demand_panels {
+                        // loop services
+                        for service in ["Cold Water", "Heated Water"] {
+                            name_col.push(panel.panel_name.clone());
+                            service_col.push(service.to_string());
+
+                            // number of fixtures
+                            let n_fixtures = match &service {
+                                &"Cold Water" => panel.n_fixtures as i32,
+                                &"Heated Water" => 0,
+                                _ => 0,
+                            };
+
+                            n_fixtures_col.push(n_fixtures as i32);
+
+                            n_apts_col.push(match panel.n_apts.trim().parse::<usize>() {
+                                Ok(val) => val as i32,
+                                _ => 0,
+                            });
+
+                            n_occs_col.push(match panel.n_occupants.trim().parse::<usize>() {
+                                Ok(val) => val as i32,
+                                _ => 0,
+                            });
+
+                            let flow_rate = match &service {
+                                &"Cold Water" => match panel.dp_results.q_tw {
+                                    Some(q) => Some(q),
+                                    None => None,
+                                },
+                                &"Heated Water" => match panel.dp_results.q_hw {
+                                    Some(q) => Some(q),
+                                    None => None,
+                                },
+                                _ => None,
+                            };
+
+                            flow_rate_col.push(flow_rate);
+                        }
+                    }
+
+                    // create dataframe
+                    let result: PolarsResult<()> = (|| {
+                        let df = DataFrame::new_infer_height(vec![
+                            Column::new("Desc".into(), name_col),
+                            Column::new("Service".into(), service_col),
+                            Column::new("N Fixtures".into(), n_fixtures_col),
+                            Column::new("N Apartments".into(), n_apts_col),
+                            Column::new("N Occupants".into(), n_occs_col),
+                            Column::new("Flow Rate".into(), flow_rate_col),
+                        ])?;
+
+                        if let Some(path) = FileDialog::new()
+                            .add_filter("Excel workbook", &["xlsx"])
+                            .set_file_name("demand.xlsx")
+                            .save_file()
+                        {
+                            let mut writer = PolarsExcelWriter::new();
+                            writer.write_dataframe(&df)?;
+                            writer.save(path)?;
+                        }
+
+                        Ok(())
+                    })();
+
+                    if let Err(err) = result {
+                        eprintln!("Export failed: {err}");
+                    };
+                }
             }
         }
 
@@ -381,11 +466,18 @@ impl State {
             demand_panel_col = demand_panel_col.push(view);
         }
 
+        let export_button = if self.demand_panels.is_empty() {
+            button(text("Export").size(14))
+        } else {
+            button(text("Export").size(14)).on_press(Message::ExportToExcel)
+        };
+
         let header_row = row![
             text("Project Details").size(24),
             space().width(Fill),
             button(text("Save").size(14)),
             button(text("Open").size(14)),
+            export_button,
         ]
         .spacing(5)
         .align_y(Center)

@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-iced = { version = "0.14.0", features = ["image"] }
+iced = { version = "0.14.0", features = ["image", "svg"] }
+polars = "0.55.2"
+polars_excel_writer = "0.27.0"
+rfd = "0.17.2"
 short-id = "0.5.0"
 # [target.'cfg(target_arch = "wasm32")'.dependencies]
 # getrandom = { version = "0.2", features = ["js"] }
