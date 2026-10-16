@@ -1,10 +1,9 @@
 use std::fmt::Debug;
-use std::path;
 
 use iced::widget::{
     button, column, container, pick_list, row, scrollable, space, svg, text, text_input, tooltip,
 };
-use iced::{Center, Element, Fill, Right, Task};
+use iced::{Center, Color, Element, Fill, Right, Task};
 
 use polars::prelude::*;
 use polars_excel_writer::PolarsExcelWriter;
@@ -105,6 +104,11 @@ pub enum Message {
 impl State {
     // save function
     fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
+        //TODO - add in stateV1 funcionality....
+        // let state: StateV1 = StateV1 {
+        //
+        // };
+
         let file = SaveFile {
             format_version: 1,
             state: serde_json::to_value(self)?,
@@ -576,12 +580,6 @@ impl State {
             demand_panel_col = demand_panel_col.push(view);
         }
 
-        let export_button = if self.demand_panels.is_empty() {
-            button(text("Export").size(14))
-        } else {
-            button(text("Export").size(14)).on_press(Message::ExportToExcel)
-        };
-
         let current_file = if !self.current_file_name.as_os_str().is_empty() {
             let file_name = self
                 .current_file_name
@@ -595,20 +593,54 @@ impl State {
         };
 
         let save_btn = tooltip(
-            button(svg("src/assets/icons/save.svg").width(15)).on_press(Message::FileSave),
+            button(
+                svg("src/assets/icons/save.svg")
+                    .width(15)
+                    .style(|_, _| svg::Style {
+                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    }),
+            )
+            .on_press(Message::FileSave),
             "Save file",
             tooltip::Position::Top,
         );
 
         let saveas_btn = tooltip(
-            button(svg("src/assets/icons/save_as.svg").width(15)).on_press(Message::FileSaveAs),
+            button(
+                svg("src/assets/icons/save_as.svg")
+                    .width(15)
+                    .style(|_, _| svg::Style {
+                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    }),
+            )
+            .on_press(Message::FileSaveAs),
             "Save file as",
             tooltip::Position::Top,
         );
 
         let open_btn = tooltip(
-            button(svg("src/assets/icons/open.svg").width(15)).on_press(Message::FileOpen),
+            button(
+                svg("src/assets/icons/open.svg")
+                    .width(15)
+                    .style(|_, _| svg::Style {
+                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    }),
+            )
+            .on_press(Message::FileOpen),
             "Open file",
+            tooltip::Position::Top,
+        );
+
+        let export_btn = tooltip(
+            button(
+                svg("src/assets/icons/excel.svg")
+                    .width(15)
+                    .style(|_, _| svg::Style {
+                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    }),
+            )
+            .on_press(Message::ExportToExcel),
+            "Export demand panels to Excel",
             tooltip::Position::Top,
         );
 
@@ -619,11 +651,23 @@ impl State {
             open_btn,
             save_btn,
             saveas_btn,
-            export_button,
+            export_btn,
         ]
         .spacing(5)
         .align_y(Center)
         .width(Fill);
+
+        let demand_panel_header = row![
+            text("Demand Panels").size(24),
+            space().width(Fill),
+            tooltip(
+                button("+").on_press(Message::AddDemandPanel),
+                "Add demand panel",
+                tooltip::Position::Top,
+            )
+        ]
+        .width(1400)
+        .spacing(10);
 
         let content = column![
             header_row,
@@ -636,8 +680,7 @@ impl State {
             water_temp_inputs_row,
             text("Fixture Settings").size(24),
             fixture_settings_input_row,
-            button("Add Demand Panel").on_press(Message::AddDemandPanel),
-            text("Demand Panels").size(24),
+            demand_panel_header,
             demand_panel_col,
         ]
         .width(1400)

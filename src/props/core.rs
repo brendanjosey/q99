@@ -39,17 +39,17 @@ pub struct DemandPanelResults {
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub enum WaterUseType {
-    ColdAndHeatedWater,
     ColdWater,
     HeatedWater,
+    ColdAndHeatedWater,
 }
 
 impl std::fmt::Display for WaterUseType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
-            Self::ColdAndHeatedWater => "C&HW",
             Self::HeatedWater => "HW",
             Self::ColdWater => "CW",
+            Self::ColdAndHeatedWater => "Both",
         })
     }
 }

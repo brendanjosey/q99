@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 120" width="230" height="120" aria-label="Q subscript XCIX logo" role="img">
+  <g fill="#111111" transform="translate(14 0) skewX(-7)">
+    <!-- Large, squared Q with a clipped counter and a strong diagonal tail. -->
+    <path fill-rule="evenodd" d="M22 4H70L88 22V67L70 85H22L4 67V22L22 4ZM26 25L21 30V59L26 64H61L68 57V32L61 25H26Z"/>
+    <path d="M55 54L94 93L81 106L42 67Z"/>
+    <!-- Compact geometric XCIX subscript. -->
+    <path d="M100 61H112L130 103H118Z M118 61H130L112 103H100Z"/>
+    <path d="M164 61H142L134 69V95L142 103H164V92H146V72H164Z"/>
+    <path d="M168 61H182V103H168Z"/>
+    <path d="M186 61H198L216 103H204Z M204 61H216L198 103H186Z"/>
+  </g>
+</svg>

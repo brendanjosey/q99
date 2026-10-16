@@ -1,7 +1,8 @@
-use iced::widget::{button, column, container, row, rule, space, text, text_input};
-use iced::{Border, Center, Color, Element, Fill, Right, Shadow, Task, Vector};
+use iced::widget::{button, column, container, row, rule, space, svg, text, text_input};
+use iced::{Border, Center, Color, Element, Fill, Right, Shadow, Task, Theme, Vector};
 //use short_id::short_id_ordered;
 
+use crate::components::demand_panel::Message::Delete;
 use crate::components::pipe_size_panel::{Message as PipeSizePanelMessage, PipeSizePanel};
 use crate::props::core::{DemandPanelResults, FixtureProps, FlowType, TempProps};
 use crate::props::fixtures::{Fixture, FixtureType};
@@ -480,6 +481,14 @@ impl DemandPanel {
         .height(140)
         .width(Fill);
 
+        let trash_icon = svg("src/assets/icons/trash.svg")
+            .width(15)
+            .style(|theme: &Theme, _| svg::Style {
+                color: Some(button::primary(theme, button::Status::Active).text_color),
+            });
+
+        let delete_btn = button(trash_icon).on_press(Message::Delete);
+
         let content_col = column![
             inputs_row,
             // rule::horizontal(1),
@@ -499,7 +508,8 @@ impl DemandPanel {
             //     .map(move |message| Message::PipeSizePanelCw(message)),
             row![
                 space().width(Fill),
-                button(text("Delete").size(12)).on_press(Message::Delete),
+                delete_btn,
+                //button(text("Delete").size(12)).on_press(Message::Delete),
             ],
         ]
         .spacing(5)
@@ -556,10 +566,10 @@ impl DemandPanel {
         )
         .padding(10)
         .align_x(Center)
-        .style(|_theme| container::Style {
+        .style(|theme| container::Style {
             // background: Some(Background::Color(Color::WHITE)),
             border: Border {
-                color: Color::from_rgb8(180, 180, 180),
+                color: theme.palette().text, //Color::from_rgb8(180, 180, 180),
                 width: 1.0,
                 radius: 8.0.into(),
             },

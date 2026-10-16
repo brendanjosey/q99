@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" aria-label="Q icon" role="img">
+  <g fill="#111111" transform="translate(8 0) skewX(-7)">
+    <path fill-rule="evenodd" d="M27 10H64L78 24V58L64 72H27L13 58V24L27 10ZM30 27L25 32V51L30 56H58L64 50V32L59 27H30Z"/>
+    <path d="M55 48L82 75L71 86L44 59Z"/>
+  </g>
+</svg>
