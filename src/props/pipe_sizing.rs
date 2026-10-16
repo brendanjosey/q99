@@ -1,4 +1,6 @@
-#[derive(Debug, Default, PartialEq, Eq, Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Default, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub enum PipeMaterial {
     #[default]
     Copper,
@@ -14,7 +16,7 @@ impl std::fmt::Display for PipeMaterial {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub enum CopperPipeDia {
     DN15,
     DN18,
@@ -94,7 +96,7 @@ impl CopperPipeDia {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PexPipeDia {
     DN16,
     DN20,

@@ -3,8 +3,9 @@ use iced::{Center, Element, Fill, Task};
 use std::f64::consts::PI;
 
 use crate::props::pipe_sizing::{CopperPipeDia, PexPipeDia, PipeMaterial};
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Deserialize, Serialize)]
 pub struct PipeSizePanel {
     pipe_material: Option<PipeMaterial>,
     pipe_dia_copper: Option<CopperPipeDia>,

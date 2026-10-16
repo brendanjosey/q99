@@ -1,7 +1,8 @@
 use std::fmt::Debug;
+use std::path;
 
 use iced::widget::{
-    button, column, container, pick_list, row, scrollable, space, text, text_input,
+    button, column, container, pick_list, row, scrollable, space, svg, text, text_input, tooltip,
 };
 use iced::{Center, Element, Fill, Right, Task};
 
@@ -13,7 +14,42 @@ use crate::components::demand_panel::{DemandPanel, Message as DemandPanelMessage
 use crate::props::core::{FixtureProps, TempProps, WaterUseType};
 use crate::props::fixtures::FixtureType;
 
-//#[derive(Default)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize)]
+struct SaveFile {
+    format_version: u32,
+    state: serde_json::Value,
+}
+
+#[derive(Deserialize, Serialize)]
+struct StateV1 {
+    project_name: String,
+    project_description: String,
+    project_date: String,
+    project_client: String,
+    project_revision: String,
+    project_job_number: String,
+    demand_panels: Vec<DemandPanel>,
+    temp_props: TempProps,
+    fixture_props: [FixtureProps; 8],
+}
+
+//TODO - if newer version is added..
+// #[derive(Deserialize, Serialize)]
+// struct StateV2 {
+//     project_name: String,
+//     project_description: String,
+//     project_date: String,
+//     project_client: String,
+//     project_revision: String,
+//     project_job_number: String,
+//     demand_panels: Vec<DemandPanel>,
+//     temp_props: TempProps,
+//     fixture_props: [FixtureProps; 8],
+// }
+
+#[derive(Deserialize, Serialize)]
 pub struct State {
     project_name: String,
     project_description: String,
@@ -24,6 +60,8 @@ pub struct State {
     demand_panels: Vec<DemandPanel>,
     temp_props: TempProps,
     fixture_props: [FixtureProps; 8],
+    #[serde(skip)]
+    current_file_name: std::path::PathBuf,
 }
 
 impl Default for State {
@@ -38,6 +76,7 @@ impl Default for State {
             demand_panels: Vec::new(),
             temp_props: TempProps::default(),
             fixture_props: FixtureProps::all(),
+            current_file_name: std::path::PathBuf::new(),
         }
     }
 }
@@ -58,9 +97,62 @@ pub enum Message {
     DemandPanel(usize, DemandPanelMessage),
     AddDemandPanel,
     ExportToExcel,
+    FileSave,
+    FileSaveAs,
+    FileOpen,
 }
 
 impl State {
+    // save function
+    fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let file = SaveFile {
+            format_version: 1,
+            state: serde_json::to_value(self)?,
+        };
+
+        let json = serde_json::to_vec_pretty(&file)?;
+        std::fs::write(&self.current_file_name, json)?;
+        Ok(())
+    }
+
+    fn load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let Some(path) = FileDialog::new()
+            .add_filter("Open File", &["json"])
+            .pick_file()
+        else {
+            return Ok(()); // User cancelled
+        };
+
+        let bytes = std::fs::read(&path)?;
+        let file: SaveFile = serde_json::from_slice(&bytes)?;
+
+        if file.format_version != 1 {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                format!("Unsupported save version: {}", file.format_version),
+            )
+            .into());
+        }
+
+        let mut state: Self = serde_json::from_value(file.state)?;
+        state.current_file_name = path;
+        *self = state;
+
+        Ok(())
+    }
+
+    fn save_as(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let Some(path) = FileDialog::new()
+            .add_filter("Save File", &["json"])
+            .save_file()
+        else {
+            return Ok(()); // User cancelled
+        };
+
+        self.current_file_name = path;
+        self.save()
+    }
+
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::ProjectNameChanged(name) => {
@@ -277,6 +369,24 @@ impl State {
                     };
                 }
             }
+
+            Message::FileSave => {
+                if self.current_file_name.as_os_str().is_empty() {
+                    // launch save as
+                    let _ = self.save_as();
+                } else {
+                    // save
+                    let _ = self.save();
+                }
+            }
+
+            Message::FileSaveAs => {
+                let _ = self.save_as();
+            }
+
+            Message::FileOpen => {
+                let _ = self.load();
+            }
         }
 
         Task::none()
@@ -305,7 +415,7 @@ impl State {
 
         let pd_client = row![
             text("Project Client:").size(12).width(150).align_x(Right),
-            text_input("Enter the project client...", &self.project_name,)
+            text_input("Enter the project client...", &self.project_client,)
                 .on_input(Message::ProjectClientChanged),
         ]
         .align_y(Center)
@@ -472,11 +582,43 @@ impl State {
             button(text("Export").size(14)).on_press(Message::ExportToExcel)
         };
 
+        let current_file = if !self.current_file_name.as_os_str().is_empty() {
+            let file_name = self
+                .current_file_name
+                .clone()
+                .into_os_string()
+                .into_string()
+                .unwrap();
+            text(format!("Current file: {}", &file_name)).size(10)
+        } else {
+            text("")
+        };
+
+        let save_btn = tooltip(
+            button(svg("src/assets/icons/save.svg").width(15)).on_press(Message::FileSave),
+            "Save file",
+            tooltip::Position::Top,
+        );
+
+        let saveas_btn = tooltip(
+            button(svg("src/assets/icons/save_as.svg").width(15)).on_press(Message::FileSaveAs),
+            "Save file as",
+            tooltip::Position::Top,
+        );
+
+        let open_btn = tooltip(
+            button(svg("src/assets/icons/open.svg").width(15)).on_press(Message::FileOpen),
+            "Open file",
+            tooltip::Position::Top,
+        );
+
         let header_row = row![
             text("Project Details").size(24),
             space().width(Fill),
-            button(text("Save").size(14)),
-            button(text("Open").size(14)),
+            current_file,
+            open_btn,
+            save_btn,
+            saveas_btn,
             export_button,
         ]
         .spacing(5)

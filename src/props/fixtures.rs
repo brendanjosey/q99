@@ -1,8 +1,7 @@
-use crate::props::core::{
-    FixtureProps, ProbabiltyCoeffs, TempProps, WaterUseType, calc_diversified_flow_rate,
-};
+use crate::props::core::{ProbabiltyCoeffs, WaterUseType};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub enum FixtureType {
     Shower,
     Bath,
@@ -14,7 +13,7 @@ pub enum FixtureType {
     Dishwasher,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct Fixture {
     fixture_type: FixtureType,
     water_use_type: WaterUseType,

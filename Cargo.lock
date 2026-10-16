@@ -1076,6 +1076,8 @@ dependencies = [
  "polars",
  "polars_excel_writer",
  "rfd",
+ "serde",
+ "serde_json",
  "short-id",
 ]
 

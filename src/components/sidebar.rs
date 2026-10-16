@@ -43,7 +43,7 @@ pub fn view(active_screen: Screen) -> Element<'static, Screen> {
                 let mut style = button::secondary(theme, status);
                 //style.background = Some(Color::from_rgb8(128, 128, 128).into());
                 //style.background = Some(Color::from_rgb8(192, 192, 192).into());
-                style.background = Some(Color::from_rgb8(64, 64, 64).into());
+                style.background = Some(Color::from_rgb8(0, 0, 0).into());
                 //style.text_color = Color::WHITE;
                 style
             })

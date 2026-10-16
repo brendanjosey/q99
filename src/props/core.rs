@@ -1,4 +1,5 @@
-use crate::props::fixtures::{Fixture, FixtureType};
+use crate::props::fixtures::FixtureType;
+use serde::{Deserialize, Serialize};
 
 pub fn calc_diversified_flow_rate(
     flow_rate: Option<f64>,
@@ -27,7 +28,7 @@ pub fn calc_diversified_flow_rate(
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Deserialize, Serialize)]
 pub struct DemandPanelResults {
     pub q_total: Option<f64>,
     pub q_tw: Option<f64>,
@@ -36,7 +37,7 @@ pub struct DemandPanelResults {
     pub p0: Option<f64>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub enum WaterUseType {
     ColdAndHeatedWater,
     ColdWater,
@@ -60,7 +61,7 @@ pub enum FlowType {
     ColdWaterDemand,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct TempProps {
     pub cold_water_temp: Option<f64>,
     pub cold_water_temp_str: String,
@@ -79,7 +80,7 @@ impl Default for TempProps {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct ProbabiltyCoeffs {
     pub pk1: f64,
     pub c1: f64,
@@ -88,7 +89,7 @@ pub struct ProbabiltyCoeffs {
     pub c4: f64,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct FixtureProps {
     pub fixture_type: FixtureType,
     pub water_use_type: Option<WaterUseType>,

@@ -5,8 +5,9 @@ use iced::{Border, Center, Color, Element, Fill, Right, Shadow, Task, Vector};
 use crate::components::pipe_size_panel::{Message as PipeSizePanelMessage, PipeSizePanel};
 use crate::props::core::{DemandPanelResults, FixtureProps, FlowType, TempProps};
 use crate::props::fixtures::{Fixture, FixtureType};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DemandPanel {
     //panel_id: String,
     pub panel_name: String,
