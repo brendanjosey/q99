@@ -295,7 +295,7 @@ impl State {
             }
 
             Message::ExportToExcel => {
-                if self.demand_panels.is_empty() != true {
+                if !self.demand_panels.is_empty() {
                     let mut name_col = Vec::new();
                     let mut service_col = Vec::new();
                     let mut n_fixtures_col = Vec::new();
@@ -310,13 +310,13 @@ impl State {
                             service_col.push(service.to_string());
 
                             // number of fixtures
-                            let n_fixtures = match &service {
-                                &"Cold Water" => panel.n_fixtures as i32,
-                                &"Heated Water" => 0,
+                            let n_fixtures = match service {
+                                "Cold Water" => panel.n_fixtures as i32,
+                                "Heated Water" => 0,
                                 _ => 0,
                             };
 
-                            n_fixtures_col.push(n_fixtures as i32);
+                            n_fixtures_col.push(n_fixtures);
 
                             n_apts_col.push(match panel.n_apts.trim().parse::<usize>() {
                                 Ok(val) => val as i32,
@@ -328,12 +328,12 @@ impl State {
                                 _ => 0,
                             });
 
-                            let flow_rate = match &service {
-                                &"Cold Water" => match panel.dp_results.q_tw {
+                            let flow_rate = match service {
+                                "Cold Water" => match panel.dp_results.q_tw {
                                     Some(q) => Some(q),
                                     None => None,
                                 },
-                                &"Heated Water" => match panel.dp_results.q_hw {
+                                "Heated Water" => match panel.dp_results.q_hw {
                                     Some(q) => Some(q),
                                     None => None,
                                 },
@@ -587,7 +587,7 @@ impl State {
                 .into_os_string()
                 .into_string()
                 .unwrap();
-            text(format!("Current file: {}", &file_name)).size(10)
+            text(format!("Current file: {}", file_name)).size(10)
         } else {
             text("")
         };

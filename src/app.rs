@@ -60,18 +60,18 @@ impl App {
         };
 
         let logo = svg("src/assets/icons/q_xcix_logo.svg")
-            .width(80)
+            .width(50)
             .style(|theme: &Theme, _| svg::Style {
                 color: Some(theme.palette().text),
             });
 
         let top_bar = column![
             logo,
-            text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
-                .size(12),
+            // text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
+            // .size(12),
         ]
-        .width(Fill)
-        .align_x(Center);
+        .width(Fill);
+        // .align_x(Center);
 
         let bottom_bar = row![text("version: 0.1.0 (Beta)").size(10),]
             .width(Fill)
