@@ -12,6 +12,7 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 ## Features
 ***Follows Verification Method formula in the NCC 2025 Volume 3***  
 - Codified approach for cold water, see Clause XX.X
+
 [!CAUTION]
 - Approach for heated water is still under review.
 
@@ -48,19 +49,21 @@ If you want a deep dive into how these work, I suggest reading these:
 - Buchberger XX
   
 ***Hunter's fixture unit problem***
+
 Hunter modeled each fixture group with its own probability of use (assuming a binomial distribution) and flow rate.  
 Simply adding the groups’ individual 99th-percentile demands would overstate how often their peak uses happen together.  
 Fixture units provided an elegant way to combine the groups into one design curve.
 However, these units are is essence a snapshot of plumbing system demands from the 1940's.
-Today fixtures and appliances are considerably more efficent - leading to lower water deamands.
+Today fixtures and appliances are considerably more water efficent - leading to lower water deamands.
 
 ***A convolution-like approach***
+
 A convoltion is a mathematical approach used to combine two or more distribuitons of any kind into a distribution that is representative of all underlying distributions.
 Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.
   
 Now if we assume a fixtures probability of use during the peak hour follows a normal distribution $X \sim \mathcal{N}(\mu,\sigma)$:
 - with a mean ($$\mu\$$) and standard deviation ($${\sigma}$$)
-- where the variance is $${\sigma^2}$$
+- and the variance is $${\sigma^2}$$
 
 The convolution of two or more Normal Distributions is the sum of their means and variances:
 - $$\mu\ = \mu_1\ + \mu_2\$$ 
@@ -112,8 +115,6 @@ The modified implementation is then:
 
 The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces back to the original Wistort method.
 So in essence you only need to implemnet this one formula.
-
-
 
 ***Fixture probability of use (p-values)***
 
