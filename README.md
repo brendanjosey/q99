@@ -117,13 +117,16 @@ The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces bac
 So in essence you only need to implemnet this one formula.
 
 ***Fixture probability of use (p-values)***
-So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.
-This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.
-[Omaghomi et. al](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.
-They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates.
-A key finding from this study is that fixture probaility of use is not a fixed value.
+So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.  
+This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.  
+[Omaghomi et. al (2020)](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.  
+They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates to determine p-values for common residential fixtrues.  
+A key finding from this study is that fixture probability of use is not a fixed value.
 As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
-(insert figure)
+<p align="center">
+  <img src="assets/p_values_1.png" alt="p-value as a function of building size"/>
+</p>
+*source: Omaghomi et. al 2020*
 
   
 
