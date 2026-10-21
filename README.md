@@ -41,12 +41,12 @@ $$Q_{XCIX}$$ ($$Q_{99}$$) is a free and open source calculator used to estimate 
 ## Installation
 
 ## The formulas
-QXCIX uses two formulas to probalablisticly estimate the 99th percentile demand in residential buildings.
+QXCIX uses two formulas to probabalisticly estimate the 99th percentile demand in residential buildings.
 Based on the work to determine associated fixture parameters it is assumed this values occurs during the peak hour of water use (consumpstion) for a given day.
-These formulas are already implemented in the [IAPMO's Water Demand Calculator:](https://iapmo.org/we-stand/water-demand-calculator).
+These formulas are already implemented in the [IAPMO's Water Demand Calculator](https://iapmo.org/we-stand/water-demand-calculator).
 If you want a deep dive into how these work, I suggest reading these:
-- Omaghomi - XX
-- Buchberger XX
+- [Omaghomi et. al](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207)
+- [Peak Water Demand Study](assets/Buchberger et. al (2017) peak-water-demand-study-executive-summary.pdf) 
   
 ***Hunter's fixture unit problem***
 
@@ -117,6 +117,15 @@ The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces bac
 So in essence you only need to implemnet this one formula.
 
 ***Fixture probability of use (p-values)***
+So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.
+This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.
+[Omaghomi et. al](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.
+They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates.
+A key finding from this study is that fixture probaility of use is not a fixed value.
+As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
+(insert figure)
+
+  
 
 
 ## DISCLAIMER
