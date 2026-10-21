@@ -13,8 +13,8 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 ***Follows Verification Method formula in the NCC 2025 Volume 3***  
 - Codified approach for cold water, see Clause XX.X
 
-[!CAUTION]
-- Approach for heated water is still under review.
+>[!CAUTION]
+>- Approach for heated water is still under review.
 
 ***Size your residential projects with a modern and accurate peak demand formula!***  
 - The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
