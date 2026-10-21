@@ -28,7 +28,7 @@ pub fn calc_diversified_flow_rate(
     }
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Debug, Default, Deserialize, Serialize, Clone)]
 pub struct DemandPanelResults {
     pub q_total: Option<f64>,
     pub q_tw: Option<f64>,

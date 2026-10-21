@@ -8,7 +8,7 @@ use crate::props::core::{DemandPanelResults, FixtureProps, FlowType, TempProps};
 use crate::props::fixtures::{Fixture, FixtureType};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct DemandPanel {
     //panel_id: String,
     pub panel_name: String,
@@ -16,7 +16,7 @@ pub struct DemandPanel {
     pub n_apts: String,
     pub n_occupants: String,
     pub n_fixtures: usize,
-    fixtures: [Fixture; 8],
+    pub fixtures: [Fixture; 8],
     q_total: String,
     q_tw: String,
     // q_cw: String, for later extensions as designeers become more proficient with new method.

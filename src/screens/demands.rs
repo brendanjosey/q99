@@ -10,7 +10,7 @@ use polars_excel_writer::PolarsExcelWriter;
 use rfd::FileDialog;
 
 use crate::components::demand_panel::{DemandPanel, Message as DemandPanelMessage};
-use crate::props::core::{FixtureProps, TempProps, WaterUseType};
+use crate::props::core::{FixtureProps, FlowType, TempProps, WaterUseType};
 use crate::props::fixtures::FixtureType;
 
 use serde::{Deserialize, Serialize};
@@ -105,13 +105,21 @@ impl State {
     // save function
     fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
         //TODO - add in stateV1 funcionality....
-        // let state: StateV1 = StateV1 {
-        //
-        // };
+        let state: StateV1 = StateV1 {
+            project_name: self.project_name.clone(),
+            project_description: self.project_description.clone(),
+            project_date: self.project_date.clone(),
+            project_client: self.project_client.clone(),
+            project_revision: self.project_revision.clone(),
+            project_job_number: self.project_job_number.clone(),
+            demand_panels: self.demand_panels.clone(),
+            temp_props: self.temp_props.clone(),
+            fixture_props: self.fixture_props.clone(),
+        };
 
         let file = SaveFile {
             format_version: 1,
-            state: serde_json::to_value(self)?,
+            state: serde_json::to_value(state)?,
         };
 
         let json = serde_json::to_vec_pretty(&file)?;
@@ -299,25 +307,86 @@ impl State {
                     let mut name_col = Vec::new();
                     let mut service_col = Vec::new();
                     let mut n_fixtures_col = Vec::new();
+                    let mut n_shower_col = Vec::new();
+                    let mut n_bath_col = Vec::new();
+                    let mut n_toilet_col = Vec::new();
+                    let mut n_tap_basin_col = Vec::new();
+                    let mut n_tap_kitchen_col = Vec::new();
+                    let mut n_tap_laundry_col = Vec::new();
+                    let mut n_wm_col = Vec::new();
+                    let mut n_dw_col = Vec::new();
                     let mut n_apts_col = Vec::new();
                     let mut n_occs_col = Vec::new();
                     let mut flow_rate_col = Vec::new();
 
                     for panel in &self.demand_panels {
                         // loop services
-                        for service in ["Cold Water", "Heated Water"] {
-                            name_col.push(panel.panel_name.clone());
-                            service_col.push(service.to_string());
-
-                            // number of fixtures
-                            let n_fixtures = match service {
-                                "Cold Water" => panel.n_fixtures as i32,
-                                "Heated Water" => 0,
-                                _ => 0,
+                        for service in [FlowType::TotalWaterDemand, FlowType::HeatedWaterDemand] {
+                            let service_str = match service {
+                                FlowType::TotalWaterDemand => "Cold Water",
+                                FlowType::HeatedWaterDemand => "Heated Water",
+                                _ => "",
                             };
 
-                            n_fixtures_col.push(n_fixtures);
+                            name_col.push(panel.panel_name.clone());
+                            service_col.push(service_str.to_string());
+                            // fixture qtys
 
+                            let mut total_qty = 0;
+
+                            if service == FlowType::TotalWaterDemand {
+                                for fixture in &panel.fixtures {
+                                    let qty = if fixture.water_use_type()
+                                        == &WaterUseType::ColdAndHeatedWater
+                                        || fixture.water_use_type() == &WaterUseType::ColdWater
+                                    {
+                                        fixture.qty() as i32
+                                    } else {
+                                        0i32
+                                    };
+
+                                    total_qty += qty;
+
+                                    match fixture.fixture_type() {
+                                        FixtureType::Shower => n_shower_col.push(qty),
+                                        FixtureType::Bath => n_bath_col.push(qty),
+                                        FixtureType::Toilet => n_toilet_col.push(qty),
+                                        FixtureType::TapBasin => n_tap_basin_col.push(qty),
+                                        FixtureType::TapKitchen => n_tap_kitchen_col.push(qty),
+                                        FixtureType::TapLaundry => n_tap_laundry_col.push(qty),
+                                        FixtureType::WashingMachine => n_wm_col.push(qty),
+                                        FixtureType::Dishwasher => n_dw_col.push(qty),
+                                    }
+                                }
+                            } else {
+                                for fixture in &panel.fixtures {
+                                    let qty = if fixture.water_use_type()
+                                        == &WaterUseType::ColdAndHeatedWater
+                                        || fixture.water_use_type() == &WaterUseType::HeatedWater
+                                    {
+                                        fixture.qty() as i32
+                                    } else {
+                                        0i32
+                                    };
+
+                                    total_qty += qty;
+
+                                    match fixture.fixture_type() {
+                                        FixtureType::Shower => n_shower_col.push(qty),
+                                        FixtureType::Bath => n_bath_col.push(qty),
+                                        FixtureType::Toilet => n_toilet_col.push(0),
+                                        FixtureType::TapBasin => n_tap_basin_col.push(qty),
+                                        FixtureType::TapKitchen => n_tap_kitchen_col.push(qty),
+                                        FixtureType::TapLaundry => n_tap_laundry_col.push(qty),
+                                        FixtureType::WashingMachine => n_wm_col.push(qty),
+                                        FixtureType::Dishwasher => n_dw_col.push(qty),
+                                    }
+                                }
+                            };
+
+                            n_fixtures_col.push(total_qty);
+
+                            // number of apartments
                             n_apts_col.push(match panel.n_apts.trim().parse::<usize>() {
                                 Ok(val) => val as i32,
                                 _ => 0,
@@ -329,11 +398,11 @@ impl State {
                             });
 
                             let flow_rate = match service {
-                                "Cold Water" => match panel.dp_results.q_tw {
+                                FlowType::TotalWaterDemand => match panel.dp_results.q_tw {
                                     Some(q) => Some(q),
                                     None => None,
                                 },
-                                "Heated Water" => match panel.dp_results.q_hw {
+                                FlowType::HeatedWaterDemand => match panel.dp_results.q_hw {
                                     Some(q) => Some(q),
                                     None => None,
                                 },
@@ -349,15 +418,26 @@ impl State {
                         let df = DataFrame::new_infer_height(vec![
                             Column::new("Desc".into(), name_col),
                             Column::new("Service".into(), service_col),
-                            Column::new("N Fixtures".into(), n_fixtures_col),
-                            Column::new("N Apartments".into(), n_apts_col),
-                            Column::new("N Occupants".into(), n_occs_col),
-                            Column::new("Flow Rate".into(), flow_rate_col),
+                            Column::new("Apartments".into(), n_apts_col),
+                            Column::new("Occupants".into(), n_occs_col),
+                            Column::new("Fixtures".into(), n_fixtures_col),
+                            Column::new("Flow Rate (L/s)".into(), flow_rate_col),
+                            Column::new("Showers".into(), n_shower_col),
+                            Column::new("Baths".into(), n_bath_col),
+                            Column::new("Toilets".into(), n_toilet_col),
+                            Column::new("Tap-Basin".into(), n_tap_basin_col),
+                            Column::new("Tap-Kitchen".into(), n_tap_kitchen_col),
+                            Column::new("Tap-Laundry".into(), n_tap_laundry_col),
+                            Column::new("Washing Machines".into(), n_wm_col),
+                            Column::new("Dishwashers".into(), n_dw_col),
                         ])?;
 
                         if let Some(path) = FileDialog::new()
                             .add_filter("Excel workbook", &["xlsx"])
-                            .set_file_name("demand.xlsx")
+                            .set_file_name(format!(
+                                "{}_demand_estimates_rev_{}.xlsx",
+                                self.project_name, self.project_revision
+                            ))
                             .save_file()
                         {
                             let mut writer = PolarsExcelWriter::new();
