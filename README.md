@@ -39,25 +39,37 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 QXCIX uses two formulas to probalablisticly estimate the 99th percentile demand in residential buildings.
 Based on the work to determine associated fixture parameters it is assumed this values occurs during the peak hour of water use (consumpstion) for a given day.
 These formulas are already implemented in the [IAPMO's Water Demand Calculator:] (https://iapmo.org/we-stand/water-demand-calculator).
+If you want a deep dive into how these work, I suggest reading these:
+- Omaghomi - XX
+- Buchberger XX
   
-### Hunter's fixture unit problem
+***Hunter's fixture unit problem***
 Hunter modeled each fixture group with its own probability of use (assuming a binomial distribution) and flow rate.  
-Simplt adding the groups’ individual 99th-percentile demands would overstate how often their peak uses happen together.  
+Simply adding the groups’ individual 99th-percentile demands would overstate how often their peak uses happen together.  
 Fixture units provided a way to combine the groups into one design curve.
 
-### A convolution-like approach
+***A convolution-like approach***
 A convoltion is a mathematical approach used to combine two or more distribuitons of any kind into a distribution that is representative of all underlying distributions.
-Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.  
-Now if we assume a fixtures probability of use during the peak hour follows a normal distribution $X_i \sim \mathcal{N}(\mu_i,\sigma_i)$:
-- with a mean ($$\mu\$$) and standard deviation $$\sqrt{\sigma^2}$$
+Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.
+  
+Now if we assume a fixtures probability of use during the peak hour follows a normal distribution $X \sim \mathcal{N}(\mu,\sigma)$:
+- with a mean ($$\mu\$$) and standard deviation $${\sigma^2}$$
 - where the variance is $${\sigma^2}$$
 
-We can represent the combined of two or more Normal Distributions as the sum of their means and variances:
-$$S \sim \mathcal{N}(\sum_{i=1}^{n}\mu_i,\ \sum_{i=1}^{n}\sigma_i^2)$$
+The convolution of two or more Normal Distributions is the sum of their means and variances:
+- $$\mu\ = \mu_1\ + \mu_2\$$ 
+- $$\sigma\ = \sigma_1\ + \sigma_2\$$
 
-### Wistort's formula
+So for a given set of Normal Distributions we can estimate the 99th percentile value as 2.326 standard deviations from the mean:
+- $$X_99 = \mu\ + 2.326\sigma\$$
 
-### Modified Wistort formula for smaller buildings
+![Example of a normal distribution](assets/norm_dist.png)
+ 
+***Wistort's formula***
+
+***Modified Wistort formula for smaller buildings***
+
+Fixture probability of use (p-values)***
 
 
 ## DISCLAIMER
