@@ -11,14 +11,15 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 
 ## Features
 ***Follows Verification Method formula in the NCC 2025 Volume 3***  
-- Codified approach, see Clause XX.X
+- Codified approach for cold water, see Clause XX.X
+[!CAUTION]
+- Approach for heated water is still under review.
 
 ***Size your residential projects with a modern and accurate peak demand formula!***  
 - The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
 - All work is backed by peer reviewed research by Deakin University to better understand how we use water in Australian residential buildings.  
 
-  
-***No more imaginary "loading" or "fixture" units!***  
+  ***No more imaginary "loading" or "fixture" units!***  
 - The new formula uses tangible fixture flow rate values.  
 - This enables water demand estimates to adapt as plumbing fixture change over time.  
 
@@ -72,14 +73,16 @@ So for a given set of Normal Distributions we can estimate the 99th percentile v
 
 ![Example of a normal distribution](assets/norm_dist.png)
  
-***Wistort's formula***
+***Wistort's formula***  
 Recognising this relationship - Robert Wistort proposed a new approach to estimate water demands in building to the research community.
 Wistort proposed the binomial distribution of $$n$$ fixtures with a probabilty of use, $$p$$ could be approximated using the Normal Distribution:
 - the mean, $$\mu\ = np$$
 - the variance $$\sigma^2 = np(1-p)$$
+
 The mean ($$npq$$) and variance ($$\sqrt{np(1-p)q^2}$$) are then mulitplied by $$q$$ to transform each fixture into a distribution the represents the fixtures flow rate.
 
-The final implmenation is then:
+The final implemenation is then:
+
 ![Wistort Method](assets/wistort_method.png)
 
 where:
@@ -94,8 +97,25 @@ where:
 Reference to Wistort's original paper: Wistort, *R. A. (1994). "A new look at determining water demands in building: ASPE direct analytic method." Technical Proceedings; ASPE 1994 Convention, American Society of Plumbing Engineers, Kansas City, MO, 17-34.*
 
 ***Modified Wistort formula for smaller buildings***
+US researchers discovered that Wistort's approach is only valid for larger buildings with higher fixture counts.
 
-Fixture probability of use (p-values)***
+This is because building with lower occupancy and fixture counts spend more time at idle (not in use).
+As a result, the developed Normal Distirbuition begins to shift most of the density's mass to be less than zero and doesn't accurately represnt our intended purpose anymore.
+To account for this, the research team developed a "zero-truncated" approximation for the Binomial Distribution:  
+- where the mean: $$\mu = np/1-P_0$$
+- and the variance: $$ \sigma^2 = np(1-p)/1-P_0 - P_0\mu^2$$
+- $$P_0 = (1-p)^n$$ is the Probabilty of peak hour stagnation (idle time).
+
+The modified implementation is then:
+
+![Modified Wistort Method](assets/modified_wistort_method.png)
+
+The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces back to the original Wistort method.
+So in essence you only need to implemnet this one formula.
+
+
+
+***Fixture probability of use (p-values)***
 
 
 ## DISCLAIMER
