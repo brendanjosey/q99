@@ -76,7 +76,8 @@ So for a given set of Normal Distributions we can estimate the 99th percentile v
 
 ![Example of a normal distribution](assets/norm_dist.png)
  
-***Wistort's formula***  
+***Wistort's formula***
+
 Recognising this relationship - Robert Wistort proposed a new approach to estimate water demands in building to the research community.
 Wistort proposed the binomial distribution of $$n$$ fixtures with a probabilty of use, $$p$$ could be approximated using the Normal Distribution:
 - the mean, $$\mu\ = np$$
@@ -100,6 +101,7 @@ where:
 Reference to Wistort's original paper: Wistort, *R. A. (1994). "A new look at determining water demands in building: ASPE direct analytic method." Technical Proceedings; ASPE 1994 Convention, American Society of Plumbing Engineers, Kansas City, MO, 17-34.*
 
 ***Modified Wistort formula for smaller buildings***
+
 US researchers discovered that Wistort's approach is only valid for larger buildings with higher fixture counts.
 
 This is because building with lower occupancy and fixture counts spend more time at idle (not in use).
@@ -117,13 +119,14 @@ The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces bac
 So in essence you only need to implemnet this one formula.
 
 ***Fixture probability of use (p-values)***
+
 So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.  
 This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.  
 [Omaghomi et. al (2020)](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.  
 They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates to determine p-values for common residential fixtrues.  
 A key finding from this study is that fixture probability of use is not a fixed value.
 As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
-<img align="center" src="assets/p_values_1.png" alt="p-value as a function of building size"/>
+![p-values as a function of building size](assets/p_values_1.png)  
 *source: Omaghomi et. al 2020*
 
   
