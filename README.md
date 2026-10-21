@@ -47,18 +47,14 @@ Fixture units provided a way to combine the groups into one design curve.
 
 ### A convolution-like approach
 A convoltion is a mathematical approach used to combine two or more distribuitons of any kind into a distribution that is representative of all underlying distributions.
-Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.
+Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.  
 Now if we assume a fixtures probability of use during the peak hour follows a normal distribution:
 - with a mean ($$\mu\$$) and standard deviation $$\sqrt{\sigma^2}$$
 - where the variance is $${\sigma^2}$$
 
 We can represent the combined of two or more Normal Distributions as the sum of their means and variances:
-$$
-S \sim \mathcal{N}\!\left(
-\sum_{i=1}^{n}\mu_i,\;
-\sum_{i=1}^{n}\sigma_i^2
-\right)
-$$
+$$S \sim \mathcal{N}(\sum_{i=1}^{n}\mu_i,\ \sum_{i=1}^{n}\sigma_i^2)$$
+
 ### Wistort's formula
 
 ### Modified Wistort formula for smaller buildings
