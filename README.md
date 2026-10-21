@@ -2,7 +2,7 @@
 $$Q_{XCIX}$$ ($$Q_{99}$$) is a free and open source calculator used to estimate peak water demands in Australian residential buildings.
 
   
-Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/)
+**Project intiative driven by:** [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/)
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
 **Research conducted by: Deakin University**
@@ -43,7 +43,7 @@ Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](
 ## The formulas
 QXCIX uses two formulas to probalablisticly estimate the 99th percentile demand in residential buildings.
 Based on the work to determine associated fixture parameters it is assumed this values occurs during the peak hour of water use (consumpstion) for a given day.
-These formulas are already implemented in the [IAPMO's Water Demand Calculator:] (https://iapmo.org/we-stand/water-demand-calculator).
+These formulas are already implemented in the [IAPMO's Water Demand Calculator:](https://iapmo.org/we-stand/water-demand-calculator).
 If you want a deep dive into how these work, I suggest reading these:
 - Omaghomi - XX
 - Buchberger XX
