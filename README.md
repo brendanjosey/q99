@@ -123,9 +123,7 @@ This leads us solve the remaining unknown variable, the probability of use, $$p$
 They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates to determine p-values for common residential fixtrues.  
 A key finding from this study is that fixture probability of use is not a fixed value.
 As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
-<p align="center">
-  <img src="assets/p_values_1.png" alt="p-value as a function of building size"/>
-</p>
+<img align="center" src="assets/p_values_1.png" alt="p-value as a function of building size"/>
 *source: Omaghomi et. al 2020*
 
   
