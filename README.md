@@ -1,4 +1,7 @@
-# Demands
+# $$Q_{XCIX}$$
+$$Q_{XCIX}$$ ($$Q_{99}$$) is a free and open source calculator used to estimate peak water demands in Australian residential buildings.
+
+  
 Project intiative driven by: [The Hydraulic Consultants of Australasia Pty Ltd](https://hcaa.org.au/)
 - Water Demand Investigation Project: https://www.waterdemand.com.au/
   
@@ -46,7 +49,9 @@ If you want a deep dive into how these work, I suggest reading these:
 ***Hunter's fixture unit problem***
 Hunter modeled each fixture group with its own probability of use (assuming a binomial distribution) and flow rate.  
 Simply adding the groups’ individual 99th-percentile demands would overstate how often their peak uses happen together.  
-Fixture units provided a way to combine the groups into one design curve.
+Fixture units provided an elegant way to combine the groups into one design curve.
+However, these units are is essence a snapshot of plumbing system demands from the 1940's.
+Today fixtures and appliances are considerably more efficent - leading to lower water deamands.
 
 ***A convolution-like approach***
 A convoltion is a mathematical approach used to combine two or more distribuitons of any kind into a distribution that is representative of all underlying distributions.
@@ -62,10 +67,31 @@ The convolution of two or more Normal Distributions is the sum of their means an
 
 So for a given set of Normal Distributions we can estimate the 99th percentile value as 2.326 standard deviations from the mean:
 - $$X_{99} = \mu\ + 2.326\sigma\$$
+- $$X_{99} = \mu\ + 2.326\sqrt{\sigma^2\}$$ (variance)
+ 
 
 ![Example of a normal distribution](assets/norm_dist.png)
  
 ***Wistort's formula***
+Recognising this relationship - Robert Wistort proposed a new approach to estimate water demands in building to the research community.
+Wistort proposed the binomial distribution of $$n$$ fixtures with a probabilty of use, $$p$$ could be approximated using the Normal Distribution:
+- the mean, $$\mu\ = np$$
+- the variance $$\sigma^2 = np(1-p)$$
+The mean ($$npq$$) and variance ($$\sqrt{np(1-p)q^2}$$) are then mulitplied by $$q$$ to transform each fixture into a distribution the represents the fixtures flow rate.
+
+The final implmenation is then:
+![Wistort Method](assets/wistort_method.png)
+
+where:
+- $$Q_{0.99}$$ is the 99th percentile flow rate for a set of $$K$$ fixture groups.
+- $$n_k$$ is the number of fixtures per group.
+- $$p_k$$ is probability of use per fixture group.
+- $$q_k$$ is the flow rate per fixture group.
+- $$z_{0.99}$$ is the 99th percentile z-value of the Normal Distribution approximated as 2.326.
+- $$K$$ is the number of fixture groups.
+- $$k$$ is the index of a specific fixture group.
+
+Reference to Wistort's original paper: Wistort, *R. A. (1994). "A new look at determining water demands in building: ASPE direct analytic method." Technical Proceedings; ASPE 1994 Convention, American Society of Plumbing Engineers, Kansas City, MO, 17-34.*
 
 ***Modified Wistort formula for smaller buildings***
 
