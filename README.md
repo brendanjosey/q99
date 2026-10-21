@@ -53,15 +53,15 @@ A convoltion is a mathematical approach used to combine two or more distribuiton
 Three Blue One Brown gives a really good visual demonstration into the what/why/how of a convolution.
   
 Now if we assume a fixtures probability of use during the peak hour follows a normal distribution $X \sim \mathcal{N}(\mu,\sigma)$:
-- with a mean ($$\mu\$$) and standard deviation $${\sigma^2}$$
+- with a mean ($$\mu\$$) and standard deviation ($${\sigma}$$)
 - where the variance is $${\sigma^2}$$
 
 The convolution of two or more Normal Distributions is the sum of their means and variances:
 - $$\mu\ = \mu_1\ + \mu_2\$$ 
-- $$\sigma\ = \sigma_1\ + \sigma_2\$$
+- $$\sigma\ = \sqrt{\sigma_1\ + \sigma_2\}$$
 
 So for a given set of Normal Distributions we can estimate the 99th percentile value as 2.326 standard deviations from the mean:
-- $$X_99 = \mu\ + 2.326\sigma\$$
+- $$X_{99} = \mu\ + 2.326\sigma\$$
 
 ![Example of a normal distribution](assets/norm_dist.png)
  
