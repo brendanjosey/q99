@@ -135,6 +135,7 @@ The end result for p-values are:
 $$p_k = p_{k,B} + F_{o,B}$$
 
 $$p_{k,B} = \begin{cases} p_{k1}, & \text{when } B = 1 \\ c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\ c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20 \end{cases}$$
+when $$B = 1, p_k = c_1p_{k1}B^{-c_2}$$
 
 $$F_{o,B} = m_{k,B}(o-B)$$
 
