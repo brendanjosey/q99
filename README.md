@@ -134,16 +134,11 @@ $$Q_{XCIX}$$ goes a step further and scales the probalilty of ficture use based 
 The end result for p-values are:
 $$p_k = p_{k,B} + F_{o,B}$$
 
-$$p_{k,B} = \begin{cases} p_{k1}, & \text{when } B = 1 \\[4pt] c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\[4pt] c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20 \end{cases}$$
+$$p_{k,B} = \begin{cases} p_{k1}, & \text{when } B = 1 \\ c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\ c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20 \end{cases}$$
 
-$$
-F_{o,B} = m_{k,B}(o-B)
-$$
+$$F_{o,B} = m_{k,B}(o-B)$$
 
-$$
-m_{k,B} = c_3 B^{-c_4}
-\qquad \text{when } B \geq 1
-$$
+$$m_{k,B} = c_3 B^{-c_4}\qquad \text{when } B \geq 1$$
 
 ![pk](assets/pk.png)  
 ![pkb](assets/pkb.png)  
