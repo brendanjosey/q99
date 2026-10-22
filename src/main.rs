@@ -6,7 +6,7 @@ use app::App;
 
 fn main() -> iced::Result {
     iced::application(App::new, App::update, App::view)
-        .title("Application Title")
+        .title("Q99")
         .theme(App::theme)
         .run()
 }
