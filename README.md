@@ -132,18 +132,9 @@ As building size and number of occupants grows, so does the randomness of water 
 We can see these values offer some form of relationship that can be represented by the number of aprtments. The IAPMO implementation assumes a fixed occupancy level of 3 people per apartment.
 $$Q_{XCIX}$$ goes a step further and scales the probalilty of ficture use based on the estimated average occupancy.
 The end result for p-values are:
-$$
-p_k = p_{k,B} + F_{o,B}
-$$
+$$p_k = p_{k,B} + F_{o,B}$$
 
-$$
-p_{k,B} =
-\begin{cases}
-p_{k1}, & \text{when } B = 1 \\[4pt]
-c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\[4pt]
-c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20
-\end{cases}
-$$
+$$p_{k,B} = \begin{cases} p_{k1}, & \text{when } B = 1 \\[4pt] c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\[4pt] c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20 \end{cases}$$
 
 $$
 F_{o,B} = m_{k,B}(o-B)
