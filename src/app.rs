@@ -66,7 +66,8 @@ impl App {
             });
 
         let top_bar = column![
-            logo,
+            text("")
+            // logo,
             // text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
             // .size(12),
         ]
