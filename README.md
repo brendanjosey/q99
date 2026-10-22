@@ -116,7 +116,7 @@ The modified implementation is then:
 ![Modified Wistort Method](assets/modified_wistort_method.png)
 
 The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces back to the original Wistort method.
-So in essence you only need to implemnet this one formula.
+So in essence you only need to implement this one formula.
 
 ***Fixture probability of use (p-values)***
 
@@ -128,6 +128,16 @@ A key finding from this study is that fixture probability of use is not a fixed 
 As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
 ![p-values as a function of building size](assets/p_values_1.png)  
 *source: Omaghomi et. al 2020*
+
+We can see these values offer some form of relationship that can be represented by the number of aprtments. The IAPMO implementation assumes a fixed occupancy level of 3 people per apartment.
+$$Q_{XCIX}$$ goes a step further and scales the probalilty of ficture use based on the estimated average occupancy.
+The end result for p-values are:
+
+![pk](assets/pk.png)  
+![pkb](assets/pkb.png)  
+![Fob](assets/fob.png)  
+![mk](assets/mk.png)  
+
 
   
 
