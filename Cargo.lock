@@ -1069,20 +1069,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7eed2c4702fa172d1ce21078faa7c5203e69f5394d48cc436d25928394a867a2"
 
 [[package]]
-name = "demands"
-version = "0.1.0"
-dependencies = [
- "directories",
- "iced",
- "polars",
- "polars_excel_writer",
- "rfd",
- "serde",
- "serde_json",
- "short-id",
-]
-
-[[package]]
 name = "digest"
 version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4388,6 +4374,20 @@ name = "pxfm"
 version = "0.1.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d55d956fa96f5ec02be2e13af0e20391a5aa83d6a074e3ad368959d0fab299ea"
+
+[[package]]
+name = "q99"
+version = "0.1.0"
+dependencies = [
+ "directories",
+ "iced",
+ "polars",
+ "polars_excel_writer",
+ "rfd",
+ "serde",
+ "serde_json",
+ "short-id",
+]
 
 [[package]]
 name = "qoi"
