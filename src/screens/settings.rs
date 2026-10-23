@@ -8,7 +8,7 @@ use std::{fs, io};
 
 fn settings_path() -> Result<PathBuf, Box<dyn Error>> {
     let base = BaseDirs::new().ok_or("could not find a config directory")?;
-    Ok(base.config_dir().join("Demands").join("settings.json"))
+    Ok(base.config_dir().join("q99").join("settings.json"))
 }
 
 fn write_settings(path: &Path, settings: &SettingsV1) -> Result<(), Box<dyn Error>> {
