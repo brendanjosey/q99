@@ -32,7 +32,7 @@ impl App {
         Self {
             active_screen: Screen::Demands,
             demands: demands::State::default(),
-            settings: settings::State::new(),
+            settings: settings::State::load_or_create().unwrap_or_default(),
         }
     }
 
