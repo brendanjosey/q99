@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use iced::widget::{
     button, column, container, pick_list, row, scrollable, space, svg, text, text_input, tooltip,
 };
-use iced::{Center, Color, Element, Fill, Right, Task};
+use iced::{Center, Color, Element, Fill, Right, Task, Theme};
 
 use polars::prelude::*;
 use polars_excel_writer::PolarsExcelWriter;
@@ -99,6 +99,7 @@ pub enum Message {
     FileSave,
     FileSaveAs,
     FileOpen,
+    NewProject,
 }
 
 impl State {
@@ -471,6 +472,15 @@ impl State {
             Message::FileOpen => {
                 let _ = self.load();
             }
+
+            Message::NewProject => {
+                // save current file
+                if !self.current_file_name.as_os_str().is_empty() {
+                    let _ = self.save();
+                }
+                // reset self
+                *self = Self::default();
+            }
         }
 
         Task::none()
@@ -672,12 +682,25 @@ impl State {
             text("")
         };
 
+        let new_btn = tooltip(
+            button(
+                svg("src/assets/icons/new.svg")
+                    .width(15)
+                    .style(|theme: &Theme, _| svg::Style {
+                        color: Some(button::primary(theme, button::Status::Active).text_color),
+                    }),
+            )
+            .on_press(Message::NewProject),
+            "New project",
+            tooltip::Position::Top,
+        );
+
         let save_btn = tooltip(
             button(
                 svg("src/assets/icons/save.svg")
                     .width(15)
-                    .style(|_, _| svg::Style {
-                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    .style(|theme: &Theme, _| svg::Style {
+                        color: Some(button::primary(theme, button::Status::Active).text_color),
                     }),
             )
             .on_press(Message::FileSave),
@@ -689,8 +712,8 @@ impl State {
             button(
                 svg("src/assets/icons/save_as.svg")
                     .width(15)
-                    .style(|_, _| svg::Style {
-                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    .style(|theme: &Theme, _| svg::Style {
+                        color: Some(button::primary(theme, button::Status::Active).text_color),
                     }),
             )
             .on_press(Message::FileSaveAs),
@@ -702,8 +725,8 @@ impl State {
             button(
                 svg("src/assets/icons/open.svg")
                     .width(15)
-                    .style(|_, _| svg::Style {
-                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    .style(|theme: &Theme, _| svg::Style {
+                        color: Some(button::primary(theme, button::Status::Active).text_color),
                     }),
             )
             .on_press(Message::FileOpen),
@@ -715,8 +738,8 @@ impl State {
             button(
                 svg("src/assets/icons/excel.svg")
                     .width(15)
-                    .style(|_, _| svg::Style {
-                        color: Some(Color::from_rgb(0.188, 0.196, 0.286)),
+                    .style(|theme: &Theme, _| svg::Style {
+                        color: Some(button::primary(theme, button::Status::Active).text_color),
                     }),
             )
             .on_press(Message::ExportToExcel),
@@ -728,6 +751,7 @@ impl State {
             text("Project Details").size(24),
             space().width(Fill),
             current_file,
+            new_btn,
             open_btn,
             save_btn,
             saveas_btn,
