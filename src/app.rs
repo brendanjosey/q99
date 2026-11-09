@@ -65,8 +65,8 @@ impl App {
         //     });
 
         let top_bar = column![
-            text("").size(16),
-            text(""),
+            text("Residential Peak Demand Calculator").size(16),
+            // text(""),
             // logo,
             // text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
             // .size(12),

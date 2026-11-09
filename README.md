@@ -128,20 +128,24 @@ As building size and number of occupants grows, so does the randomness of water 
 *source: Omaghomi et. al 2020*
 
 We can see these values offer some form of relationship that can be represented by the number of aprtments. The IAPMO implementation assumes a fixed occupancy level of 3 people per apartment.  
+  
 $Q_{99}$ goes a step further and scales the probalilty of fixture use based on the estimated average occupancy.  
 The end result for p-values are:
 - $p_k = p_{k,B} + F_{o,B}$
 
-  - ${when } B=1, p_{k,B} = p_{k1}$
-  - ${when } 2<=B<20, p_{k,B} = c_1 p_{k1} B^{-c_2}$
-  - ${when } B > 20 p_{k,B} = c_1 p_{k1} 20^{-c_2}$
+- p_{k1}:
+  - ${when  B=1}  p_{k,B} = p_{k1}$
+  - ${when 2<=B<20}  p_{k,B} = c_1 p_{k1} B^{-c_2}$
+  - ${when B > 20}  p_{k,B} = c_1 p_{k1} 20^{-c_2}$
 
 - $F_{o,B} = m_{k,B}(o-B)$
 
-- $m_{k,B} = c_3 B^{-c_4} {when B >= 1}$
+- $m_{k,B} = c_3 B^{-c_4} ({when B >= 1})$
 
 ## DISCLAIMER
-The application is provided free and open source with all source code visible for review. Although care has been taken to ensure the accuracy, completeness, and reliability of "demands" ('Software'), the Developer nor any other party makes any warranties, express or implied, or representations regarding the accuracy of the Software. The Developer nor any other party assumes any liability or responsibility for any errors or omissions in the information contained in or output by the Software. The Developer nor any other party assumes any responsibility for the consequences of using such information, nor for any infringement of third-party intellectual property rights that may result from its use.
-The Developer recommends that any user of this Software reads and reviews the data and papers written as part of the development of this method to determine the Residential 99th percentile demands within Australian (Class 2) buildings.
+This application was developed as a means for myself to develop a usefull tool while learning a new programming language.
+While care has been taken to ensure accuracy of formulas, it is the responsibilty of the designer using the software to ensure the outputs are correct.
+I (The Developer) nor any other 3rd party assumes any liabilty or responsilbilty for any errors or omissions in the information contained or the output of the Software.
+
 ## License
 Demands is released under the [MIT License](https://opensource.org/licenses/MIT).
