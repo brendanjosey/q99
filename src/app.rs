@@ -58,14 +58,15 @@ impl App {
             Screen::Settings => self.settings.view().map(Message::Settings),
         };
 
-        let logo = svg("src/assets/icons/q_xcix_logo.svg")
-            .width(50)
-            .style(|theme: &Theme, _| svg::Style {
-                color: Some(theme.palette().text),
-            });
+        // let logo = svg("src/assets/icons/q_xcix_logo.svg")
+        //     .width(50)
+        //     .style(|theme: &Theme, _| svg::Style {
+        //         color: Some(theme.palette().text),
+        //     });
 
         let top_bar = column![
             text("").size(16),
+            text(""),
             // logo,
             // text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
             // .size(12),

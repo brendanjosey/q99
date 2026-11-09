@@ -5,5 +5,5 @@ fn main() {
         resource
             .compile()
             .expect("failed to compile Windows resources");
-    }
+    };
 }
