@@ -121,7 +121,7 @@ So in essence you only need to implement this one formula.
 So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.  
 This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.  
 [Omaghomi et. al (2020)](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.  
-They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates to determine p-values for common residential fixtrues.  
+They combined the data from individual homes into buildings of vary sizes (number of apartments) and occupancy rates to determine p-values for common residential fixtures.  
 A key finding from this study is that fixture probability of use is not a fixed value.
 As building size and number of occupants grows, so does the randomness of water use, resulting in diminishing p-values:
 ![p-values as a function of building size](assets/p_values_1.png)  
@@ -133,7 +133,7 @@ $Q_{99}$ goes a step further and scales the probalilty of fixture use based on t
 The end result for p-values are:
 - $p_k = p_{k,B} + F_{o,B}$
 
-- p_{k1}:
+- $p_{k1}$:
   - ${when  B=1}  p_{k,B} = p_{k1}$
   - ${when 2<=B<20}  p_{k,B} = c_1 p_{k1} B^{-c_2}$
   - ${when B > 20}  p_{k,B} = c_1 p_{k1} 20^{-c_2}$
