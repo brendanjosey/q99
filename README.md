@@ -127,26 +127,18 @@ As building size and number of occupants grows, so does the randomness of water 
 ![p-values as a function of building size](assets/p_values_1.png)  
 *source: Omaghomi et. al 2020*
 
-We can see these values offer some form of relationship that can be represented by the number of aprtments. The IAPMO implementation assumes a fixed occupancy level of 3 people per apartment.
-$$Q_{XCIX}$$ goes a step further and scales the probalilty of ficture use based on the estimated average occupancy.
+We can see these values offer some form of relationship that can be represented by the number of aprtments. The IAPMO implementation assumes a fixed occupancy level of 3 people per apartment.  
+$Q_{99}$ goes a step further and scales the probalilty of fixture use based on the estimated average occupancy.  
 The end result for p-values are:
-$$p_k = p_{k,B} + F_{o,B}$$
+- $p_k = p_{k,B} + F_{o,B}$
 
-$$p_{k,B} = \begin{cases} p_{k1}, & \text{when } B = 1 \\ c_1 p_{k1} B^{-c_2}, & \text{when } 2 \leq B \leq 20 \\ c_1 p_{k1} 20^{-c_2}, & \text{when } B > 20 \end{cases}$$
-when $$B = 1, p_k = c_1p_{k1}B^{-c_2}$$
+  - ${when } B=1, p_{k,B} = p_{k1}$
+  - ${when } 2<=B<20, p_{k,B} = c_1 p_{k1} B^{-c_2}$
+  - ${when } B > 20 p_{k,B} = c_1 p_{k1} 20^{-c_2}$
 
-$$F_{o,B} = m_{k,B}(o-B)$$
+- $F_{o,B} = m_{k,B}(o-B)$
 
-$$m_{k,B} = c_3 B^{-c_4}\qquad \text{when } B \geq 1$$
-
-![pk](assets/pk.png)  
-![pkb](assets/pkb.png)  
-![Fob](assets/fob.png)  
-![mk](assets/mk.png)  
-
-
-  
-
+- $m_{k,B} = c_3 B^{-c_4} {when B >= 1}$
 
 ## DISCLAIMER
 The application is provided free and open source with all source code visible for review. Although care has been taken to ensure the accuracy, completeness, and reliability of "demands" ('Software'), the Developer nor any other party makes any warranties, express or implied, or representations regarding the accuracy of the Software. The Developer nor any other party assumes any liability or responsibility for any errors or omissions in the information contained in or output by the Software. The Developer nor any other party assumes any responsibility for the consequences of using such information, nor for any infringement of third-party intellectual property rights that may result from its use.
