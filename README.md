@@ -89,13 +89,13 @@ The final implemenation is then:
 ![Wistort Method](assets/wistort_method.png)
 
 where:
-- $$Q_{0.99}$$ is the 99th percentile flow rate for a set of $$K$$ fixture groups.
-- $$n_k$$ is the number of fixtures per group.
-- $$p_k$$ is probability of use per fixture group.
-- $$q_k$$ is the flow rate per fixture group.
-- $$z_{0.99}$$ is the 99th percentile z-value of the Normal Distribution approximated as 2.326.
-- $$K$$ is the number of fixture groups.
-- $$k$$ is the index of a specific fixture group.
+- $Q_{0.99}$ is the 99th percentile flow rate for a set of $$K$$ fixture groups.
+- $n_k$ is the number of fixtures per group.
+- $p_k$ is probability of use per fixture group.
+- $q_k$ is the flow rate per fixture group.
+- $z_{0.99}$ is the 99th percentile z-value of the Normal Distribution approximated as 2.326.
+- $K$ is the number of fixture groups.
+- $k$ is the index of a specific fixture group.
 
 Reference to Wistort's original paper: Wistort, *R. A. (1994). "A new look at determining water demands in building: ASPE direct analytic method." Technical Proceedings; ASPE 1994 Convention, American Society of Plumbing Engineers, Kansas City, MO, 17-34.*
 
@@ -117,7 +117,7 @@ The modified implementation is then:
 The neat thing is when $$P_0$$ is equal to zero - the formula simply reduces back to the original Wistort method.
 So in essence you only need to implement this one formula.
 
-***Fixture probability of use (p-values)***
+***Fixture probability of use (p-values)***  
 So if you haven't realised already, determing the number of fixtures and flow rates for each fixture group is rather simple and intuative.  
 This leads us solve the remaining unknown variable, the probability of use, $$p$$ or p-values for short.  
 [Omaghomi et. al (2020)](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207) was able to anaylse water use data from over 1000 US homes.  
