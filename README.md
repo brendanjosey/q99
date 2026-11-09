@@ -15,7 +15,7 @@ $$Q_{99}$$ is a free and open source calculator used to estimate peak water dema
 - [NCC 2025 Volume 3](https://www.abcb.gov.au/sites/default/files/resources/2026/NCC%202025%20Volume%20Three.pdf)
 
 >[!CAUTION]
->- Approach for heated water is still under review.
+>Approach for heated water is still under validation and will be implemented in later versions of the NCC.
 
 ***Size your residential projects with a modern and accurate peak demand formula!***  
 - The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
@@ -42,12 +42,12 @@ $$Q_{99}$$ is a free and open source calculator used to estimate peak water dema
 ## Installation
 
 ## The Formulas
-$$Q_{99} uses two formulas to estimate the 99th percentile demand in residential buildings.
+$$Q_{99}$$ uses two formulas to estimate the 99th percentile demand in residential buildings.
 Based on the work to determine associated fixture parameters it is assumed this values occurs during the peak hour of water use (consumption) for a given day.
 These formulas are already implemented in the [IAPMO's Water Demand Calculator](https://iapmo.org/we-stand/water-demand-calculator).
 If you want a deep dive into how these work, I suggest reading these:
 - [Omaghomi et. al](https://ascelibrary.org/doi/10.1061/(ASCE)WR.1943-5452.0001207)
-- ![Peak Water Demand Study](assets/Buchberger et. al (2017) peak-water-demand-study-executive-summary.pdf) 
+- ![Peak Water Demand Study](assets/peak-water-demand-study-executive-summary.pdf) 
   
 ***Hunter's fixture unit problem***
 Hunter modeled each fixture group with its own probability of use (assuming a binomial distribution) and flow rate.  
