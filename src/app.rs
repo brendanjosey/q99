@@ -13,7 +13,6 @@ pub enum Screen {
 
 pub struct App {
     active_screen: Screen,
-
     // Each screen retains its state when navigating away.
     demands: demands::State,
     // Settings are app-wide state.
@@ -66,7 +65,8 @@ impl App {
             });
 
         let top_bar = column![
-            logo,
+            text("").size(16),
+            // logo,
             // text(" Cold and Heated Water Demand Estimation Tool for Residential Buildings")
             // .size(12),
         ]
