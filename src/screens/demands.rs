@@ -557,21 +557,43 @@ impl State {
         .align_y(Center)
         .width(Fill);
 
-        let mut fixture_settings_input_row = row![
-            column![
+        let mut fixture_name_row = row![
                 text("Fixture:").size(12).align_x(Right).width(150),
-                text("Flow Rate (L/s):").size(12).align_x(Right),
-                text("Target Temperature (°C):").size(12).align_x(Right),
-                text("Heated Water Flow Rate:").size(12).align_x(Right),
-                text("Cold Water Flow Rate:").size(12).align_x(Right),
-            ]
-            .spacing(15)
-            .align_x(Right)
         ]
-        .spacing(2)
-        .width(Fill);
+        .align_y(Center)
+        .spacing(15);
+    
+        let mut fixture_flow_rate_row = row![
+                text("Flow Rate (L/s):").size(12).align_x(Right).width(150),
+        ]
+        .align_y(Center)
+        .spacing(15);
 
+        let mut fixture_temp_row = row![
+                text("Target Temperature (°C):").size(12).align_x(Right).width(150),
+        ]
+        .align_y(Center)
+        .spacing(15);
+
+        let mut fixture_hw_flow_rate_row = row![
+                text("Heated Water Flow Rate:").size(12).align_x(Right).width(150),
+        ]
+        .align_y(Center)
+        .height(30)
+        .spacing(15);
+
+        let mut fixture_cw_flow_rate_row = row![
+                text("Cold Water Flow Rate:").size(12).align_x(Right).width(150),
+        ]
+        .align_y(Center)
+        .height(30)
+        .spacing(15);
+
+        
+
+        let props_len = self.fixture_props.len();
         for props in &self.fixture_props {
+            
             let name = match &props.fixture_type {
                 FixtureType::Shower => "Shower",
                 FixtureType::Bath => "Bath",
@@ -594,7 +616,7 @@ impl State {
                     props.water_use_type.clone(),
                     |value| Message::WaterUseTypeChanged(props.fixture_type.clone(), value),
                 )
-                .width(80)
+                .width(70)
                 //.text_size(10)
                 .into(),
                 FixtureType::Dishwasher => pick_list(
@@ -606,7 +628,7 @@ impl State {
                     props.water_use_type.clone(),
                     |value| Message::WaterUseTypeChanged(props.fixture_type.clone(), value),
                 )
-                .width(80)
+                .width(70)
                 //.text_size(10)
                 .into(),
                 _ => match props.water_use_type {
@@ -640,26 +662,88 @@ impl State {
             let cold_water_flow = format!("{:.2}L/s", props.flow_rate_cw(&self.temp_props));
             let heated_water_flow = format!("{:.2}L/s", props.flow_rate_hw(&self.temp_props));
 
-            let inputs = column![
-                text(name).size(10).align_x(Center),
-                space().height(2),
-                text_input("", &props.flow_rate_str)
+            if name == "Washing Machine"  {
+               // add in appliance parameters 
+               fixture_name_row = fixture_name_row.push(
+                text("Appliance:").size(12).align_x(Right).width(150),
+               );
+
+               fixture_flow_rate_row = fixture_flow_rate_row.push(
+                text("Flow Rate (L/s):").size(12).align_x(Right).width(150),
+               );
+
+               fixture_temp_row = fixture_temp_row.push(
+                text("Water Service:").size(12).align_x(Right).width(150),
+               );
+
+               fixture_hw_flow_rate_row = fixture_hw_flow_rate_row.push(
+                text("Heated Water Flow Rate:").size(12).align_x(Right).width(150),
+               );
+
+               fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(
+                text("Cold Water Flow Rate:").size(12).align_x(Right).width(150),
+               );
+
+            }
+            // fixture name row
+
+            fixture_name_row = fixture_name_row.push(text(name).size(10).align_x(Center).width(70));
+
+            // fixture flow rate
+            fixture_flow_rate_row = fixture_flow_rate_row.push(
+                               text_input("", &props.flow_rate_str)
                     .on_input(|value| Message::FlowRateChanged(props.fixture_type.clone(), value))
                     .width(70)
                     .align_x(Center),
-                space().height(1),
-                temp_input,
-                space().height(3),
-                text(heated_water_flow),
-                space().height(5),
-                text(cold_water_flow),
-            ]
-            .spacing(2)
-            .width(100)
-            .align_x(Center);
+            );
 
-            fixture_settings_input_row = fixture_settings_input_row.push(inputs)
+            // fixture temp
+            fixture_temp_row = fixture_temp_row.push(temp_input);
+
+            // fixture hw flow rate 
+            fixture_hw_flow_rate_row = fixture_hw_flow_rate_row.push(text(heated_water_flow).align_x(Center).width(70));
+
+            // fixture cw flow rate
+            fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(text(cold_water_flow).align_x(Center).width(70));
+            // let inputs = column![
+            //     text(name).size(10).align_x(Center),
+            //     space().height(2),
+            //     text_input("", &props.flow_rate_str)
+            //         .on_input(|value| Message::FlowRateChanged(props.fixture_type.clone(), value))
+            //         .width(70)
+            //         .align_x(Center),
+            //     space().height(1),
+            //     temp_input,
+            //     space().height(3),
+            //     text(heated_water_flow),
+            //     space().height(5),
+            //     text(cold_water_flow),
+            // ]
+            // .spacing(2)
+            // .width(100)
+            // .align_x(Center);
+
+            // fixture_settings_input_row = fixture_settings_input_row.push(inputs)
         }
+
+        let fixture_settings_input_row = row![
+            column![
+                fixture_name_row,
+                fixture_flow_rate_row,
+                fixture_temp_row,
+                fixture_hw_flow_rate_row,
+                fixture_cw_flow_rate_row,
+                // text("Fixture:").size(12).align_x(Right).width(150),
+                // text("Flow Rate (L/s):").size(12).align_x(Right),
+                // text("Target Temperature (°C):").size(12).align_x(Right),
+                // text("Heated Water Flow Rate:").size(12).align_x(Right),
+                // text("Cold Water Flow Rate:").size(12).align_x(Right),
+            ]
+            .spacing(5)
+            .align_x(Right)
+        ]
+        .spacing(2)
+        .width(Fill);
 
         let mut demand_panel_col = column![].spacing(5).width(Fill);
 
@@ -782,7 +866,7 @@ impl State {
             text("Water Temperature Settings").size(24),
             // cold water temp
             water_temp_inputs_row,
-            text("Fixture Settings").size(24),
+            text("Fixture & Appliance Settings").size(24),
             fixture_settings_input_row,
             demand_panel_header,
             demand_panel_col,

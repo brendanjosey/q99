@@ -263,7 +263,7 @@ impl Fixture {
     pub fn dishwasher() -> Self {
         Self {
             fixture_type: FixtureType::Dishwasher,
-            water_use_type: WaterUseType::ColdAndHeatedWater,
+            water_use_type: WaterUseType::ColdWater,
             n: None,
             p: Some(0.001),
             flow_rate_tw: None,

@@ -47,8 +47,8 @@ pub enum WaterUseType {
 impl std::fmt::Display for WaterUseType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
-            Self::HeatedWater => "HW",
-            Self::ColdWater => "CW",
+            Self::HeatedWater => "Hot",
+            Self::ColdWater => "Cold",
             Self::ColdAndHeatedWater => "Both",
         })
     }
@@ -274,7 +274,7 @@ impl FixtureProps {
     pub fn washing_machine() -> Self {
         Self {
             fixture_type: FixtureType::WashingMachine,
-            water_use_type: Some(WaterUseType::ColdWater),
+            water_use_type: Some(WaterUseType::ColdAndHeatedWater),
             flow_rate: Some(0.22),
             flow_rate_str: 0.22.to_string(),
             temperature: Some(20.0),
