@@ -61,6 +61,8 @@ pub struct State {
     fixture_props: [FixtureProps; 8],
     #[serde(skip)]
     current_file_name: std::path::PathBuf,
+    // #[serde(skip)]
+    // temp_err_str: String,
 }
 
 impl Default for State {
@@ -205,16 +207,16 @@ impl State {
             }
 
             Message::HeatedWaterTempChanged(value) => {
-                let cw_temp = match self.temp_props.cold_water_temp {
-                    Some(t) => t,
-                    None => 0.0,
-                };
+                // let cw_temp = match self.temp_props.cold_water_temp {
+                //     Some(t) => t,
+                //     None => 0.0,
+                // };
 
                 match value.trim().parse::<f64>() {
-                    Ok(t) => self.temp_props.heated_water_temp = Some(t.clamp(cw_temp, 100.0)),
-                    _ => self.temp_props.heated_water_temp = Some(cw_temp + 0.1),
+                    Ok(t) => self.temp_props.heated_water_temp = Some(t.clamp(0.0, 100.0)),
+                    _ => self.temp_props.heated_water_temp = Some(0.0),
                 }
-                // self.temp_props.heated_water_temp = value.trim().parse::<f64>().ok();
+
                 self.temp_props.heated_water_temp_str = value;
                 for panel in &mut self.demand_panels {
                     panel.refresh_results(&self.fixture_props, &self.temp_props);
@@ -538,6 +540,35 @@ impl State {
         .spacing(5);
 
         // water temp inputs
+        let temp_input_err_text = match (
+            self.temp_props.cold_water_temp,
+            self.temp_props.heated_water_temp,
+        ) {
+            (Some(cw_temp), Some(hw_temp)) => {
+                let text_ = if cw_temp < 0.0 || cw_temp > 100.0 {
+                    text("WARNING!: accepted cold water temps must be between 0-100 °C")
+                        .color(Color::from_rgb(1.0, 0.647, 0.0))
+                } else if hw_temp < 0.0 || hw_temp > 100.0 {
+                    text("WARNING!: accepted heated water temps must be between 0-100 °C")
+                        .color(Color::from_rgb(1.0, 0.647, 0.0))
+                } else if cw_temp >= hw_temp {
+                    text("WARNING!: cold water temp must be less than heated water temp °C")
+                        .color(Color::from_rgb(1.0, 0.647, 0.0))
+                } else {
+                    text("")
+                };
+
+                text_
+            }
+            (Some(_), _) => text("WARNING!: heated water temp input error")
+                .color(Color::from_rgb(1.0, 0.647, 0.0)),
+            (_, Some(_)) => text("WARNING!: cold water temp input error")
+                .color(Color::from_rgb(1.0, 0.647, 0.0)),
+            (None, None) => {
+                text("WARNING!: water temp inputs required").color(Color::from_rgb(1.0, 0.647, 0.0))
+            }
+        };
+
         let water_temp_inputs_row = row![
             text("Cold Water Temperature: ").size(12),
             text_input("Cold water temp", &self.temp_props.cold_water_temp_str)
@@ -557,43 +588,46 @@ impl State {
         .align_y(Center)
         .width(Fill);
 
-        let mut fixture_name_row = row![
-                text("Fixture:").size(12).align_x(Right).width(150),
-        ]
-        .align_y(Center)
-        .spacing(15);
-    
-        let mut fixture_flow_rate_row = row![
-                text("Flow Rate (L/s):").size(12).align_x(Right).width(150),
-        ]
-        .align_y(Center)
-        .spacing(15);
+        let mut fixture_name_row = row![text("Fixture:").size(12).align_x(Right).width(150),]
+            .align_y(Center)
+            .spacing(15);
+
+        let mut fixture_flow_rate_row =
+            row![text("Flow Rate (L/s):").size(12).align_x(Right).width(150),]
+                .align_y(Center)
+                .spacing(15);
 
         let mut fixture_temp_row = row![
-                text("Target Temperature (°C):").size(12).align_x(Right).width(150),
+            text("Target Temperature (°C):")
+                .size(12)
+                .align_x(Right)
+                .width(150),
         ]
         .align_y(Center)
         .spacing(15);
 
         let mut fixture_hw_flow_rate_row = row![
-                text("Heated Water Flow Rate:").size(12).align_x(Right).width(150),
+            text("Heated Water Flow Rate:")
+                .size(12)
+                .align_x(Right)
+                .width(150),
         ]
         .align_y(Center)
         .height(30)
         .spacing(15);
 
         let mut fixture_cw_flow_rate_row = row![
-                text("Cold Water Flow Rate:").size(12).align_x(Right).width(150),
+            text("Cold Water Flow Rate:")
+                .size(12)
+                .align_x(Right)
+                .width(150),
         ]
         .align_y(Center)
         .height(30)
         .spacing(15);
 
-        
-
         let props_len = self.fixture_props.len();
         for props in &self.fixture_props {
-            
             let name = match &props.fixture_type {
                 FixtureType::Shower => "Shower",
                 FixtureType::Bath => "Bath",
@@ -662,28 +696,30 @@ impl State {
             let cold_water_flow = format!("{:.2}L/s", props.flow_rate_cw(&self.temp_props));
             let heated_water_flow = format!("{:.2}L/s", props.flow_rate_hw(&self.temp_props));
 
-            if name == "Washing Machine"  {
-               // add in appliance parameters 
-               fixture_name_row = fixture_name_row.push(
-                text("Appliance:").size(12).align_x(Right).width(150),
-               );
+            if name == "Washing Machine" {
+                // add in appliance parameters
+                fixture_name_row =
+                    fixture_name_row.push(text("Appliance:").size(12).align_x(Right).width(150));
 
-               fixture_flow_rate_row = fixture_flow_rate_row.push(
-                text("Flow Rate (L/s):").size(12).align_x(Right).width(150),
-               );
+                fixture_flow_rate_row = fixture_flow_rate_row
+                    .push(text("Flow Rate (L/s):").size(12).align_x(Right).width(150));
 
-               fixture_temp_row = fixture_temp_row.push(
-                text("Water Service:").size(12).align_x(Right).width(150),
-               );
+                fixture_temp_row = fixture_temp_row
+                    .push(text("Water Service:").size(12).align_x(Right).width(150));
 
-               fixture_hw_flow_rate_row = fixture_hw_flow_rate_row.push(
-                text("Heated Water Flow Rate:").size(12).align_x(Right).width(150),
-               );
+                fixture_hw_flow_rate_row = fixture_hw_flow_rate_row.push(
+                    text("Heated Water Flow Rate:")
+                        .size(12)
+                        .align_x(Right)
+                        .width(150),
+                );
 
-               fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(
-                text("Cold Water Flow Rate:").size(12).align_x(Right).width(150),
-               );
-
+                fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(
+                    text("Cold Water Flow Rate:")
+                        .size(12)
+                        .align_x(Right)
+                        .width(150),
+                );
             }
             // fixture name row
 
@@ -691,7 +727,7 @@ impl State {
 
             // fixture flow rate
             fixture_flow_rate_row = fixture_flow_rate_row.push(
-                               text_input("", &props.flow_rate_str)
+                text_input("", &props.flow_rate_str)
                     .on_input(|value| Message::FlowRateChanged(props.fixture_type.clone(), value))
                     .width(70)
                     .align_x(Center),
@@ -700,11 +736,13 @@ impl State {
             // fixture temp
             fixture_temp_row = fixture_temp_row.push(temp_input);
 
-            // fixture hw flow rate 
-            fixture_hw_flow_rate_row = fixture_hw_flow_rate_row.push(text(heated_water_flow).align_x(Center).width(70));
+            // fixture hw flow rate
+            fixture_hw_flow_rate_row =
+                fixture_hw_flow_rate_row.push(text(heated_water_flow).align_x(Center).width(70));
 
             // fixture cw flow rate
-            fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(text(cold_water_flow).align_x(Center).width(70));
+            fixture_cw_flow_rate_row =
+                fixture_cw_flow_rate_row.push(text(cold_water_flow).align_x(Center).width(70));
             // let inputs = column![
             //     text(name).size(10).align_x(Center),
             //     space().height(2),
@@ -866,6 +904,7 @@ impl State {
             text("Water Temperature Settings").size(24),
             // cold water temp
             water_temp_inputs_row,
+            temp_input_err_text,
             text("Fixture & Appliance Settings").size(24),
             fixture_settings_input_row,
             demand_panel_header,

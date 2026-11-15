@@ -4,7 +4,7 @@ use iced::{Border, Center, Color, Element, Fill, Right, Shadow, Task, Theme, Vec
 
 use crate::components::demand_panel::Message::Delete;
 use crate::components::pipe_size_panel::{Message as PipeSizePanelMessage, PipeSizePanel};
-use crate::props::core::{DemandPanelResults, FixtureProps, FlowType, TempProps};
+use crate::props::core::{DemandPanelResults, FixtureProps, FlowType, TempProps, WaterUseType};
 use crate::props::fixtures::{Fixture, FixtureType};
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +16,9 @@ pub struct DemandPanel {
     pub n_apts: String,
     pub n_occupants: String,
     pub n_fixtures: usize,
+    pub n_fixtures_hw: usize,
+    // TODO
+    // pub n_fixturues_cw_div: usize,
     pub fixtures: [Fixture; 8],
     q_total: String,
     q_tw: String,
@@ -54,6 +57,7 @@ impl DemandPanel {
             n_apts: String::new(),
             n_occupants: String::new(),
             n_fixtures: 0,
+            n_fixtures_hw: 0,
             fixtures: [
                 Fixture::shower(),
                 Fixture::bath(),
@@ -263,15 +267,29 @@ impl DemandPanel {
                     .iter_mut()
                     .find(|fixture| fixture.fixture_type() == &fixture_type)
                 {
+                    // set new qty to fixture
                     let qty = qty.trim().parse::<usize>();
                     fixture.set_qty(qty.clone());
-                    let fixture_qty = self
-                        .fixtures
-                        .iter()
-                        .map(|f| f.qty() as usize)
-                        .sum::<usize>();
+                    // update total fixture qty
+                    let fixture_qty = self.fixtures.iter().map(|f| f.qty()).sum::<usize>();
 
                     self.n_fixtures = fixture_qty;
+
+                    let fixture_qty_hw: usize = self
+                        .fixtures
+                        .iter()
+                        .map(|f| {
+                            if f.water_use_type() == &WaterUseType::ColdAndHeatedWater
+                                || f.water_use_type() == &WaterUseType::HeatedWater
+                            {
+                                f.qty()
+                            } else {
+                                0
+                            }
+                        })
+                        .sum();
+
+                    self.n_fixtures_hw = fixture_qty_hw;
                 }
             }
 

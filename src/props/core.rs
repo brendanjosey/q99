@@ -14,7 +14,19 @@ pub fn calc_diversified_flow_rate(
     };
 
     match (cw_temp, hw_temp, target_temp, flow_rate) {
-        (Some(cw), Some(hw), Some(tt), Some(q)) => {
+        (Some(cw_), Some(hw_), Some(tt), Some(q)) => {
+            // prevent cw from being greater than hw
+            let mut cw = cw_;
+            if cw_ >= hw_ {
+                cw = cw.clamp(0.0, hw_ - 0.001);
+            };
+
+            // prevent hw from being less than cw
+            let mut hw = hw_;
+            if hw_ <= cw_ {
+                hw = hw.clamp(cw + 0.001, hw_);
+            };
+
             let tt = tt.clamp(cw, hw);
             let dt = hw - cw;
 
