@@ -44,6 +44,8 @@ pub enum Message {
     PipeSizePanelHw(PipeSizePanelMessage),
     // PipeSizePanelCw(PipeSizePanelMessage),
     Delete,
+    MovePanelUp,
+    MovePanelDown,
 }
 
 impl DemandPanel {
@@ -357,6 +359,9 @@ impl DemandPanel {
             //     let _ = self.pipe_sizw_panel_cw.update(message);
             // }
             Message::Delete => {}
+
+            Message::MovePanelUp => {}
+            Message::MovePanelDown => {}
         }
 
         Task::none()
@@ -580,7 +585,21 @@ impl DemandPanel {
                 color: Some(button::primary(theme, button::Status::Active).text_color),
             });
 
+        let up_icon = svg("src/assets/icons/up.svg")
+            .width(15)
+            .style(|theme: &Theme, _| svg::Style {
+                color: Some(button::primary(theme, button::Status::Active).text_color),
+            });
+
+        let down_icon = svg("src/assets/icons/down.svg")
+            .width(15)
+            .style(|theme: &Theme, _| svg::Style {
+                color: Some(button::primary(theme, button::Status::Active).text_color),
+            });
+
         let delete_btn = button(trash_icon).on_press(Message::Delete);
+        let up_btn = button(up_icon).on_press(Message::MovePanelUp);
+        let down_btn = button(down_icon).on_press(Message::MovePanelDown);
 
         let content_col = column![
             inputs_row,
@@ -655,6 +674,8 @@ impl DemandPanel {
             rule::vertical(1),
             q99_hw_text,
             toggle_btn,
+            up_btn,
+            down_btn,
         ]
         .spacing(10)
         .align_y(Center)

@@ -293,6 +293,21 @@ impl State {
                 }
             }
 
+            Message::DemandPanel(index, DemandPanelMessage::MovePanelUp) => {
+                // println!("delete called");
+                if index != 0 {
+                    self.demand_panels.swap(index, index - 1);
+                }
+            }
+
+            Message::DemandPanel(index, DemandPanelMessage::MovePanelDown) => {
+                // println!("delete called");
+                let new_idx = (index + 1).clamp(0, self.demand_panels.len());
+                if new_idx < self.demand_panels.len() {
+                    self.demand_panels.swap(index, new_idx);
+                }
+            }
+
             Message::DemandPanel(index, message) => {
                 if let Some(panel) = self.demand_panels.get_mut(index) {
                     let _ = panel.update(message);
