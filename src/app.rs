@@ -5,6 +5,8 @@ use iced::{Element, Fill, Task, Theme, border};
 use crate::components::sidebar;
 use crate::screens::{demands, settings};
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Screen {
     Demands,
@@ -74,7 +76,7 @@ impl App {
         .width(Fill);
         // .align_x(Center);
 
-        let bottom_bar = row![text("version: 0.1.0 (Beta)").size(10),]
+        let bottom_bar = row![text(format!("version: {}", VERSION)).size(10),]
             .width(Fill)
             .align_y(Center);
 
