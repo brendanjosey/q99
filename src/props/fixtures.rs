@@ -105,6 +105,10 @@ impl Fixture {
         &self.water_use_type
     }
 
+    pub fn set_water_use_type(&mut self, water_use_type: WaterUseType) {
+        self.water_use_type = water_use_type
+    }
+
     pub fn calc_p_value(&self, apts: usize, occupants: usize) -> Result<f64, String> {
         // validate apartments
         if apts == 0 {

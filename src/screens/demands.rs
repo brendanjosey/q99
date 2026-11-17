@@ -555,7 +555,7 @@ impl State {
                     text("WARNING!: cold water temp must be less than heated water temp °C")
                         .color(Color::from_rgb(1.0, 0.647, 0.0))
                 } else {
-                    text("")
+                    text("").size(1)
                 };
 
                 text_
@@ -617,7 +617,7 @@ impl State {
         .spacing(15);
 
         let mut fixture_cw_flow_rate_row = row![
-            text("Cold Water Flow Rate:")
+            text("*Cold Water Flow Rate:")
                 .size(12)
                 .align_x(Right)
                 .width(150),
@@ -715,7 +715,7 @@ impl State {
                 );
 
                 fixture_cw_flow_rate_row = fixture_cw_flow_rate_row.push(
-                    text("Cold Water Flow Rate:")
+                    text("*Cold Water Flow Rate:")
                         .size(12)
                         .align_x(Right)
                         .width(150),
@@ -743,25 +743,6 @@ impl State {
             // fixture cw flow rate
             fixture_cw_flow_rate_row =
                 fixture_cw_flow_rate_row.push(text(cold_water_flow).align_x(Center).width(70));
-            // let inputs = column![
-            //     text(name).size(10).align_x(Center),
-            //     space().height(2),
-            //     text_input("", &props.flow_rate_str)
-            //         .on_input(|value| Message::FlowRateChanged(props.fixture_type.clone(), value))
-            //         .width(70)
-            //         .align_x(Center),
-            //     space().height(1),
-            //     temp_input,
-            //     space().height(3),
-            //     text(heated_water_flow),
-            //     space().height(5),
-            //     text(cold_water_flow),
-            // ]
-            // .spacing(2)
-            // .width(100)
-            // .align_x(Center);
-
-            // fixture_settings_input_row = fixture_settings_input_row.push(inputs)
         }
 
         let fixture_settings_input_row = row![
@@ -771,14 +752,20 @@ impl State {
                 fixture_temp_row,
                 fixture_hw_flow_rate_row,
                 fixture_cw_flow_rate_row,
+                row![
+                    text("*"),
+                    text("Diversified cold water flow rates").size(12),
+                    // space().width(Fill)
+                ]
+                .spacing(2)
+                .align_y(Center),
                 // text("Fixture:").size(12).align_x(Right).width(150),
                 // text("Flow Rate (L/s):").size(12).align_x(Right),
                 // text("Target Temperature (°C):").size(12).align_x(Right),
                 // text("Heated Water Flow Rate:").size(12).align_x(Right),
                 // text("Cold Water Flow Rate:").size(12).align_x(Right),
             ]
-            .spacing(5)
-            .align_x(Right)
+            .spacing(5) // .align_x(Right)
         ]
         .spacing(2)
         .width(Fill);

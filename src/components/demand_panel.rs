@@ -21,10 +21,12 @@ pub struct DemandPanel {
     // pub n_fixturues_cw_div: usize,
     pub fixtures: [Fixture; 8],
     q_total: String,
+    q_total_hw: String,
     q_tw: String,
     // q_cw: String, for later extensions as designeers become more proficient with new method.
     q_hw: String,
     p0: String,
+    p0_hw: String,
     pub dp_results: DemandPanelResults,
     pipe_size_panel: PipeSizePanel,
     pipe_size_panel_hw: PipeSizePanel,
@@ -69,10 +71,12 @@ impl DemandPanel {
                 Fixture::dishwasher(),
             ],
             q_total: String::new(),
+            q_total_hw: String::new(),
             q_tw: String::new(),
             //q_cw: String::new(),
             q_hw: String::new(),
             p0: String::new(),
+            p0_hw: String::new(),
             dp_results: DemandPanelResults::default(),
             pipe_size_panel: PipeSizePanel::default(),
             pipe_size_panel_hw: PipeSizePanel::default(),
@@ -82,44 +86,90 @@ impl DemandPanel {
 
     pub fn calc_total_flow_rate<'a>(&mut self, fixture_props: &'a [FixtureProps; 8]) {
         let mut total_flow = 0.0;
+        let mut total_flow_hw = 0.0;
 
         for fixture in &self.fixtures {
             let ft = fixture.fixture_type();
 
             if let Some(props) = fixture_props.iter().find(|f| &f.fixture_type == ft) {
+                // total flow
                 let n = fixture.qty() as f64;
                 let q = props.flow_rate.unwrap_or(0.0);
                 total_flow += n * q;
-            }
-        }
-
-        self.q_total = format!("{:.2}L/s", total_flow);
-        self.dp_results.q_total = Some(total_flow);
-    }
-
-    fn cacl_p0<'a>(&mut self) {
-        let mut p0_init = false;
-        let mut p0 = 1.0;
-
-        for fixture in &self.fixtures {
-            // only include if fixtury qty is greater than zero
-            if fixture.qty() > 0 {
-                let n = fixture.qty() as f64;
-                let p = fixture.p_value();
-
-                if p0_init {
-                    p0 *= (1.0 - p).powf(n);
-                } else {
-                    // initialise P0
-                    p0 = (1.0 - p).powf(n);
-                    p0_init = true;
+                // total hw flow
+                if props.water_use_type == Some(WaterUseType::ColdAndHeatedWater)
+                    || props.water_use_type == Some(WaterUseType::HeatedWater)
+                {
+                    total_flow_hw += n * q;
                 }
             }
         }
 
-        self.p0 = format!("{:.2}%", p0 * 100.0);
-        self.dp_results.p0 = Some(p0);
+        self.q_total = format!("{:.2}L/s", total_flow);
+        self.q_total_hw = format!("{:.2}L/s", total_flow_hw);
+        self.dp_results.q_total = Some(total_flow);
+        self.dp_results.q_total_hw = Some(total_flow_hw);
     }
+
+    pub fn set_water_use_types<'a>(&mut self, fixture_props: &'a [FixtureProps; 8]) {
+        for fixture in &mut self.fixtures {
+            let ft = fixture.fixture_type();
+            if let Some(props) = fixture_props.iter().find(|f| &f.fixture_type == ft) {
+                let wut_fixture = fixture.water_use_type().clone();
+                let wut_props = props.water_use_type.clone().unwrap();
+                if wut_fixture != wut_props {
+                    // update water use type
+                    fixture.set_water_use_type(wut_props);
+                }
+            }
+        }
+    }
+
+    pub fn calc_fixture_qty(&mut self) {
+        // total fixture qty
+        let fixture_qty = self.fixtures.iter().map(|f| f.qty()).sum::<usize>();
+        self.n_fixtures = fixture_qty;
+
+        // heated water fixture qty
+        let fixture_qty_hw: usize = self
+            .fixtures
+            .iter()
+            .map(|f| {
+                if f.water_use_type() == &WaterUseType::ColdAndHeatedWater
+                    || f.water_use_type() == &WaterUseType::HeatedWater
+                {
+                    f.qty()
+                } else {
+                    0
+                }
+            })
+            .sum();
+
+        self.n_fixtures_hw = fixture_qty_hw;
+    }
+    // fn cacl_p0(&mut self) {
+    //     let mut p0_init = false;
+    //     let mut p0 = 1.0;
+
+    //     for fixture in &self.fixtures {
+    //         // only include if fixtury qty is greater than zero
+    //         if fixture.qty() > 0 {
+    //             let n = fixture.qty() as f64;
+    //             let p = fixture.p_value();
+
+    //             if p0_init {
+    //                 p0 *= (1.0 - p).powf(n);
+    //             } else {
+    //                 // initialise P0
+    //                 p0 = (1.0 - p).powf(n);
+    //                 p0_init = true;
+    //             }
+    //         }
+    //     }
+
+    //     self.p0 = format!("{:.2}%", p0 * 100.0);
+    //     self.dp_results.p0 = Some(p0);
+    // }
 
     fn calc_q99<'a>(
         &mut self,
@@ -175,6 +225,17 @@ impl DemandPanel {
             };
         }
 
+        match flow_type {
+            FlowType::TotalWaterDemand => {
+                self.p0 = format!("{:.2}%", p0 * 100.0);
+                self.dp_results.p0 = Some(p0);
+            }
+            FlowType::HeatedWaterDemand => {
+                self.p0_hw = format!("{:.2}%", p0 * 100.0);
+                self.dp_results.p0_hw = Some(p0);
+            }
+            FlowType::ColdWaterDemand => {}
+        }
         let f1 = 1.0 / (1.0 - p0);
         let f2 = (1.0 + p0) * 2.326;
         let f3 = (1.0 - p0) * sum_var - p0 * sum_npq.powf(2.0);
@@ -189,14 +250,22 @@ impl DemandPanel {
         fixture_props: &'a [FixtureProps; 8],
         temp_props: &'a TempProps,
     ) {
-        if self.n_apts.len() > 0 && self.n_occupants.len() > 0 {
+        // update water use types
+        self.set_water_use_types(fixture_props);
+
+        // update fixture qtys
+        self.calc_fixture_qty();
+
+        // update total flow rates and Q99 values
+        if !self.n_apts.is_empty() && !self.n_occupants.is_empty() {
             // functions to refresh results
             self.calc_total_flow_rate(fixture_props);
-            self.cacl_p0();
-            //println!("total demands");
+            // self.cacl_p0();
+            // println!("total demands");
+            // update total water Q99
             match self.calc_q99(fixture_props, temp_props, FlowType::TotalWaterDemand) {
                 Ok(Some(q)) => {
-                    self.q_tw = format!("{:.2}L/s", q);
+                    self.q_tw = format!("{:.2}", q);
                     self.dp_results.q_tw = Some(q);
                 }
                 _ => {
@@ -205,9 +274,10 @@ impl DemandPanel {
                 }
             }
             //println!("heated water demands");
+            // update heated water Q99
             match self.calc_q99(fixture_props, temp_props, FlowType::HeatedWaterDemand) {
                 Ok(Some(q)) => {
-                    self.q_hw = format!("{:.2}L/s", q);
+                    self.q_hw = format!("{:.2}", q);
                     self.dp_results.q_hw = Some(q);
                 }
                 _ => {
@@ -271,25 +341,7 @@ impl DemandPanel {
                     let qty = qty.trim().parse::<usize>();
                     fixture.set_qty(qty.clone());
                     // update total fixture qty
-                    let fixture_qty = self.fixtures.iter().map(|f| f.qty()).sum::<usize>();
-
-                    self.n_fixtures = fixture_qty;
-
-                    let fixture_qty_hw: usize = self
-                        .fixtures
-                        .iter()
-                        .map(|f| {
-                            if f.water_use_type() == &WaterUseType::ColdAndHeatedWater
-                                || f.water_use_type() == &WaterUseType::HeatedWater
-                            {
-                                f.qty()
-                            } else {
-                                0
-                            }
-                        })
-                        .sum();
-
-                    self.n_fixtures_hw = fixture_qty_hw;
+                    self.calc_fixture_qty();
                 }
             }
 
@@ -317,7 +369,7 @@ impl DemandPanel {
                 .on_input(Message::PanelNameChanged)
                 .into()
         } else {
-            if self.panel_name.len() > 0 {
+            if !self.panel_name.is_empty() {
                 text(&self.panel_name).into()
             } else {
                 text("Demand Panel").into()
@@ -441,46 +493,69 @@ impl DemandPanel {
         .align_x(Center)
         .width(800);
 
+        let n_fixture = |ws, n| {
+            if n == 0 {
+                text(format!("{}:", ws)).size(12).width(70) //.align_x(Right)
+            } else {
+                text(format!("{}: {}", ws, n)).size(12).width(70)
+                // .align_x(Right)
+            }
+        };
+        // result rows
+        let res_n_fixtures_row = row![
+            text("Fixtures (qty):").width(Fill).align_x(Right).size(12),
+            n_fixture("CW", self.n_fixtures),
+            n_fixture("HW", self.n_fixtures_hw),
+        ]
+        .align_y(Center)
+        .spacing(5);
+
+        let res_total_flow_row = row![
+            text("Total Flow Rate:").width(Fill).align_x(Right).size(12),
+            text(format!("CW: {}", self.q_total)).size(12).width(70),
+            // .align_x(Right),
+            text(format!("HW: {}", self.q_total_hw)).size(12).width(70),
+            // .align_x(Right),
+        ]
+        .align_y(Center)
+        .spacing(5);
+
+        let res_p0_row = row![
+            text("Stagnation Probability:")
+                .width(Fill)
+                .align_x(Right)
+                .size(12),
+            text(format!("CW: {}", self.p0)).size(12).width(70),
+            // .align_x(),
+            text(format!("HW: {}", self.p0_hw)).size(12).width(70),
+            // .align_x(Right),
+        ]
+        .align_y(Center)
+        .spacing(5);
+
+        let res_q99_row = row![
+            text("99th Percentile Demand:")
+                .width(Fill)
+                .align_x(Right)
+                .size(12),
+            text(format!("CW: {}", self.q_tw)).size(12).width(70),
+            // .align_x(),
+            text(format!("HW: {}", self.q_hw)).size(12).width(70),
+            // .align_x(Right),
+        ]
+        .align_y(Center)
+        .spacing(5);
+
         let results_col = column![
             text("Results").size(16).width(Fill).align_x(Center),
             // fixtures
-            text(format!("Fixtures: {}", self.n_fixtures))
-                .size(12)
-                .width(Fill)
-                .align_x(Right),
+            res_n_fixtures_row,
             // total flow rate
-            text(format!("Total Flow Rate: {}", &self.q_total))
-                .size(12)
-                .width(Fill)
-                .align_x(Right),
+            res_total_flow_row,
             // peak hour stagnation probability
-            text(format!("Probability of Stagnation: {}", &self.p0))
-                .size(12)
-                .width(Fill)
-                .align_x(Right),
+            res_p0_row,
             // 99th percentile demands
-            text(format!(
-                "99th Percentile Demand - Cold Water: {}",
-                &self.q_tw
-            ))
-            .size(12)
-            .width(Fill)
-            .align_x(Right),
-            text(format!(
-                "99th Percentile Demand - Heated Water: {}",
-                &self.q_hw
-            ))
-            .size(12)
-            .width(Fill)
-            .align_x(Right),
-            // text(format!(
-            //     "99th Percentile Demand - Cold Water: {}",
-            //     &self.q_cw
-            // ))
-            // .size(12)
-            // .width(Fill)
-            // .align_x(Right),
-            //button("Delete").on_press(Message::Delete),
+            res_q99_row,
         ]
         .spacing(5)
         .align_x(Center)
@@ -510,7 +585,7 @@ impl DemandPanel {
         let content_col = column![
             inputs_row,
             // rule::horizontal(1),
-            text("Pipe Sizing: Total Water Demand"),
+            text("Pipe Sizing: Cold Water Demand"),
             self.pipe_size_panel
                 .view(&self.dp_results.q_tw)
                 .map(move |message| Message::PipeSizePanel(message)),
@@ -548,25 +623,31 @@ impl DemandPanel {
         let occs_text = if self.n_apts.is_empty() {
             text("Occupants: N/A")
         } else {
-            text(format!("Occupants: {}", &self.n_occupants))
+            text(format!("Occupants: {}", self.n_occupants))
         };
 
         let q99_cw_text = if self.q_tw.is_empty() {
             text("")
         } else {
-            text(format!("Q₉₉ - Cold Water: {}", &self.q_tw))
+            text(format!("Q₉₉ - Cold Water: {}", self.q_tw))
         };
 
         let q99_hw_text = if self.q_hw.is_empty() {
             text("")
         } else {
-            text(format!("Q₉₉ - Heated Water: {}", &self.q_hw))
+            text(format!("Q₉₉ - Heated Water: {}", self.q_hw))
+        };
+
+        let fixture_qty_header = if self.n_fixtures == 0 {
+            text("Fixtures: N/A")
+        } else {
+            text(format!("Fixtures: {}", self.n_fixtures))
         };
 
         let header_row = row![
             panel_name,
             rule::vertical(1),
-            text(format!("Fixtures: {}", &self.n_fixtures)),
+            fixture_qty_header,
             apts_text,
             occs_text,
             space().width(Fill),
