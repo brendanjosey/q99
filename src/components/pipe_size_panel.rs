@@ -12,6 +12,7 @@ pub struct PipeSizePanel {
     pipe_dia_pex: Option<PexPipeDia>,
     continuous_flow_rate_str: String,
     continuous_flow_rate: Option<f64>,
+    //TODO
     // velocity_str: String,
     // velocity: Option<f64>,
 }

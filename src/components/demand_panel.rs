@@ -267,7 +267,7 @@ impl DemandPanel {
             // update total water Q99
             match self.calc_q99(fixture_props, temp_props, FlowType::TotalWaterDemand) {
                 Ok(Some(q)) => {
-                    self.q_tw = format!("{:.2}", q);
+                    self.q_tw = format!("{:.2}L/s", q);
                     self.dp_results.q_tw = Some(q);
                 }
                 _ => {
@@ -279,7 +279,7 @@ impl DemandPanel {
             // update heated water Q99
             match self.calc_q99(fixture_props, temp_props, FlowType::HeatedWaterDemand) {
                 Ok(Some(q)) => {
-                    self.q_hw = format!("{:.2}", q);
+                    self.q_hw = format!("{:.2}L/s", q);
                     self.dp_results.q_hw = Some(q);
                 }
                 _ => {
@@ -500,15 +500,15 @@ impl DemandPanel {
 
         let n_fixture = |ws, n| {
             if n == 0 {
-                text(format!("{}:", ws)).size(12).width(70) //.align_x(Right)
+                text(format!("{}:", ws)).size(12).width(75) //.align_x(Right)
             } else {
-                text(format!("{}: {}", ws, n)).size(12).width(70)
+                text(format!("{}: {}", ws, n)).size(12).width(75)
                 // .align_x(Right)
             }
         };
         // result rows
         let res_n_fixtures_row = row![
-            text("Fixtures (qty):").width(Fill).align_x(Right).size(12),
+            text("Fixtures:").width(Fill).align_x(Right).size(12),
             n_fixture("CW", self.n_fixtures),
             n_fixture("HW", self.n_fixtures_hw),
         ]
@@ -517,9 +517,9 @@ impl DemandPanel {
 
         let res_total_flow_row = row![
             text("Total Flow Rate:").width(Fill).align_x(Right).size(12),
-            text(format!("CW: {}", self.q_total)).size(12).width(70),
+            text(format!("CW: {}", self.q_total)).size(12).width(75),
             // .align_x(Right),
-            text(format!("HW: {}", self.q_total_hw)).size(12).width(70),
+            text(format!("HW: {}", self.q_total_hw)).size(12).width(75),
             // .align_x(Right),
         ]
         .align_y(Center)
@@ -530,22 +530,19 @@ impl DemandPanel {
                 .width(Fill)
                 .align_x(Right)
                 .size(12),
-            text(format!("CW: {}", self.p0)).size(12).width(70),
+            text(format!("CW: {}", self.p0)).size(12).width(75),
             // .align_x(),
-            text(format!("HW: {}", self.p0_hw)).size(12).width(70),
+            text(format!("HW: {}", self.p0_hw)).size(12).width(75),
             // .align_x(Right),
         ]
         .align_y(Center)
         .spacing(5);
 
         let res_q99_row = row![
-            text("99th Percentile Demand:")
-                .width(Fill)
-                .align_x(Right)
-                .size(12),
-            text(format!("CW: {}", self.q_tw)).size(12).width(70),
+            text("Peak Demand:").width(Fill).align_x(Right).size(12),
+            text(format!("CW: {}", self.q_tw)).size(12).width(75),
             // .align_x(),
-            text(format!("HW: {}", self.q_hw)).size(12).width(70),
+            text(format!("HW: {}", self.q_hw)).size(12).width(75),
             // .align_x(Right),
         ]
         .align_y(Center)

@@ -336,6 +336,9 @@ impl State {
                     let mut n_apts_col = Vec::new();
                     let mut n_occs_col = Vec::new();
                     let mut flow_rate_col = Vec::new();
+                    // TODO - add in pipe size and velocity
+                    // let mut pipe_size_col = Vec::new();
+                    // let mut pipe_velocity_col = Vec::new();
 
                     for panel in &self.demand_panels {
                         // loop services
