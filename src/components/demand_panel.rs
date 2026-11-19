@@ -576,23 +576,29 @@ impl DemandPanel {
         .height(140)
         .width(Fill);
 
-        let trash_icon = svg("src/assets/icons/trash.svg")
-            .width(15)
-            .style(|theme: &Theme, _| svg::Style {
-                color: Some(button::primary(theme, button::Status::Active).text_color),
-            });
+        let trash_icon = svg(svg::Handle::from_memory(include_bytes!(
+            "../../src/assets/icons/trash.svg"
+        )))
+        .width(15)
+        .style(|theme: &Theme, _| svg::Style {
+            color: Some(button::primary(theme, button::Status::Active).text_color),
+        });
 
-        let up_icon = svg("src/assets/icons/up.svg")
-            .width(15)
-            .style(|theme: &Theme, _| svg::Style {
-                color: Some(button::primary(theme, button::Status::Active).text_color),
-            });
+        let up_icon = svg(svg::Handle::from_memory(include_bytes!(
+            "../../src/assets/icons/up.svg"
+        )))
+        .width(15)
+        .style(|theme: &Theme, _| svg::Style {
+            color: Some(button::primary(theme, button::Status::Active).text_color),
+        });
 
-        let down_icon = svg("src/assets/icons/down.svg")
-            .width(15)
-            .style(|theme: &Theme, _| svg::Style {
-                color: Some(button::primary(theme, button::Status::Active).text_color),
-            });
+        let down_icon = svg(svg::Handle::from_memory(include_bytes!(
+            "../../src/assets/icons/down.svg"
+        )))
+        .width(15)
+        .style(|theme: &Theme, _| svg::Style {
+            color: Some(button::primary(theme, button::Status::Active).text_color),
+        });
 
         let delete_btn = button(trash_icon).on_press(Message::Delete);
         let up_btn = button(up_icon).on_press(Message::MovePanelUp);

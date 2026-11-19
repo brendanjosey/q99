@@ -4,12 +4,13 @@ use iced::{Center, Element, Fill, Theme, border};
 use crate::app::Screen;
 
 pub fn view(active_screen: Screen) -> Element<'static, Screen> {
-    let navigation_button = |icon_path, target| {
-        let icon = svg(icon_path).style(|theme: &Theme, _| svg::Style {
+    let navigation_button = |icon_bytes: &'static [u8], target| {
+        let handle = svg::Handle::from_memory(icon_bytes);
+        let icon = svg(handle).style(|theme: &Theme, _| svg::Style {
             color: Some(button::primary(theme, button::Status::Active).text_color),
         });
 
-        let btn = if active_screen == target {
+        if active_screen == target {
             button(icon).on_press(target)
         } else {
             button(icon).on_press(target).style(|theme, _| {
@@ -19,18 +20,22 @@ pub fn view(active_screen: Screen) -> Element<'static, Screen> {
                 // //style.text_color = Color::WHITE;
                 style
             })
-        };
-
-        btn
+        }
     };
 
     let sidebar = column![
         // horizontal_rule(1),
         // button(image("src/assets/icons/drop.png").width(50)).on_press(Screen::Demands),
         //navigation_button("src/assets/icons/home.svg", Screen::Settings),
-        navigation_button("src/assets/icons/q_xcix_icon.svg", Screen::Demands),
+        navigation_button(
+            include_bytes!("../../src/assets/icons/q_xcix_icon.svg"),
+            Screen::Demands
+        ),
         space().height(Fill),
-        navigation_button("src/assets/icons/settings.svg", Screen::Settings),
+        navigation_button(
+            include_bytes!("../../src/assets/icons/settings.svg"),
+            Screen::Settings
+        ),
     ]
     .spacing(8)
     .align_x(Center)
