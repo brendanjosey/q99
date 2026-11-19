@@ -15,7 +15,7 @@ $$Q_{99}$$ is a free and open source calculator used to estimate peak water dema
 - [NCC 2025 Volume 3](https://www.abcb.gov.au/sites/default/files/resources/2026/NCC%202025%20Volume%20Three.pdf)
 
 >[!CAUTION]
->Approach for heated water is still under validation and will be implemented in later versions of the NCC.
+>Approach for heated water is still under validation.
 
 ***Size your residential projects with a modern and accurate peak demand formula!***  
 - The new formula can estimate the 99th percentile demand for cold and heated water consumption.  
