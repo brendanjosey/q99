@@ -40,6 +40,7 @@ $$Q_{99}$$ is a free and open source calculator used to estimate peak water dema
 - Got a feature request? Post an issue above. Keep in mind this is done on my own time.  
 
 ## Installation
+Download the [q99.exe](https://github.com/brendanjosey/q99/releases) in the releases and save to a preferred location on your computer.
 
 ## The Formulas
 $$Q_{99}$$ uses two formulas to estimate the 99th percentile demand in residential buildings.
