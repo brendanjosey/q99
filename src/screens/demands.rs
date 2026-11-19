@@ -811,11 +811,13 @@ impl State {
 
         let new_btn = tooltip(
             button(
-                svg("src/assets/icons/new.svg")
-                    .width(15)
-                    .style(|theme: &Theme, _| svg::Style {
-                        color: Some(button::primary(theme, button::Status::Active).text_color),
-                    }),
+                svg(svg::Handle::from_memory(include_bytes!(
+                    "../../src/assets/icons/new.svg"
+                )))
+                .width(15)
+                .style(|theme: &Theme, _| svg::Style {
+                    color: Some(button::primary(theme, button::Status::Active).text_color),
+                }),
             )
             .on_press(Message::NewProject),
             "New project",
@@ -824,11 +826,13 @@ impl State {
 
         let save_btn = tooltip(
             button(
-                svg("src/assets/icons/save.svg")
-                    .width(15)
-                    .style(|theme: &Theme, _| svg::Style {
-                        color: Some(button::primary(theme, button::Status::Active).text_color),
-                    }),
+                svg(svg::Handle::from_memory(include_bytes!(
+                    "../../src/assets/icons/save.svg"
+                )))
+                .width(15)
+                .style(|theme: &Theme, _| svg::Style {
+                    color: Some(button::primary(theme, button::Status::Active).text_color),
+                }),
             )
             .on_press(Message::FileSave),
             "Save file",
@@ -837,11 +841,13 @@ impl State {
 
         let saveas_btn = tooltip(
             button(
-                svg("src/assets/icons/save_as.svg")
-                    .width(15)
-                    .style(|theme: &Theme, _| svg::Style {
-                        color: Some(button::primary(theme, button::Status::Active).text_color),
-                    }),
+                svg(svg::Handle::from_memory(include_bytes!(
+                    "../../src/assets/icons/save_as.svg"
+                )))
+                .width(15)
+                .style(|theme: &Theme, _| svg::Style {
+                    color: Some(button::primary(theme, button::Status::Active).text_color),
+                }),
             )
             .on_press(Message::FileSaveAs),
             "Save file as",
@@ -850,11 +856,13 @@ impl State {
 
         let open_btn = tooltip(
             button(
-                svg("src/assets/icons/open.svg")
-                    .width(15)
-                    .style(|theme: &Theme, _| svg::Style {
-                        color: Some(button::primary(theme, button::Status::Active).text_color),
-                    }),
+                svg(svg::Handle::from_memory(include_bytes!(
+                    "../../src/assets/icons/open.svg"
+                )))
+                .width(15)
+                .style(|theme: &Theme, _| svg::Style {
+                    color: Some(button::primary(theme, button::Status::Active).text_color),
+                }),
             )
             .on_press(Message::FileOpen),
             "Open file",
@@ -863,11 +871,13 @@ impl State {
 
         let export_btn = tooltip(
             button(
-                svg("src/assets/icons/excel.svg")
-                    .width(15)
-                    .style(|theme: &Theme, _| svg::Style {
-                        color: Some(button::primary(theme, button::Status::Active).text_color),
-                    }),
+                svg(svg::Handle::from_memory(include_bytes!(
+                    "../../src/assets/icons/excel.svg"
+                )))
+                .width(15)
+                .style(|theme: &Theme, _| svg::Style {
+                    color: Some(button::primary(theme, button::Status::Active).text_color),
+                }),
             )
             .on_press(Message::ExportToExcel),
             "Export demand panels to Excel",
